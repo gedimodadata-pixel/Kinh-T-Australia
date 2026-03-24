@@ -35,6 +35,7 @@
         body { background-color: var(--bg-color); color: var(--text-color); transition: all 0.5s ease; overflow-x: hidden; scroll-behavior: smooth; }
         ::selection { background-color: var(--primary-pink); color: white; }
 
+        /* SPLASH SCREEN */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s; }
         #splash-screen h1 { color: var(--primary-pink); margin-bottom: 20px; font-size: 2.5rem; text-shadow: var(--neon-shadow); text-align: center; padding: 0 20px;}
         .start-btn { background: var(--primary-pink); color: white; font-size: 1.2rem; font-weight: bold; padding: 15px 40px; border: none; border-radius: 50px; box-shadow: 0 10px 20px rgba(255, 105, 180, 0.4); transition: 0.3s; animation: pulseBtn 2s infinite; cursor: pointer !important; }
@@ -231,60 +232,70 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
-        // --- HỆ THỐNG ĐỌC VĂN BẢN (AI TTS) TỐI ƯU ---
+        // --- 1. SỬA LỖI GIỌNG ĐỌC VẪN CHẠY KHI F5 ---
+        // Ép hệ điều hành hủy toàn bộ hàng đợi đọc khi tải lại trang
+        window.addEventListener('beforeunload', () => {
+            window.speechSynthesis.cancel();
+        });
+
+        // --- 2. THUẬT TOÁN TÌM GIỌNG NỮ MIỀN NAM ---
         let synth = window.speechSynthesis;
         let isVoicePlaying = false;
-        let viVoices = [];
+        let vietnameseFemaleVoice = null;
+        const audio = document.getElementById('lofi-audio');
+        
+        // Mức âm lượng tiêu chuẩn của nhạc
+        const NORMAL_MUSIC_VOLUME = 0.5; 
+        const DUCKED_MUSIC_VOLUME = 0.15; // Giảm nhạc xuống cực nhỏ khi đọc
 
-        // Lấy danh sách giọng đọc từ hệ thống của người dùng
-        function populateVoiceList() {
+        function loadVoices() {
             let voices = synth.getVoices();
-            // Lọc ra các giọng hỗ trợ Tiếng Việt
-            viVoices = voices.filter(voice => voice.lang.includes('vi'));
+            // Ưu tiên tìm giọng Hoài My (Microsoft Edge) -> Giọng Linh (Apple) -> Giọng nữ VN bất kỳ
+            vietnameseFemaleVoice = voices.find(v => v.name.includes('HoaiMy')) || 
+                                    voices.find(v => v.name.includes('Linh')) ||
+                                    voices.find(v => v.lang.includes('vi') && v.name.toLowerCase().includes('female')) ||
+                                    voices.find(v => v.lang === 'vi-VN');
         }
         
-        populateVoiceList();
+        // Trình duyệt cần một chút thời gian để tải danh sách giọng nói từ hệ điều hành
         if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = populateVoiceList;
+            speechSynthesis.onvoiceschanged = loadVoices;
         }
-
-        const reportText = "Chào mừng bạn đến với không gian sáng tạo của Trang Neee. Báo cáo Toàn cảnh Kinh tế Úc. Giai đoạn 2023: Tăng trưởng chậm lại, chịu áp lực từ chi phí sinh hoạt. Năm 2024: Giai đoạn khó khăn nhất với khủng hoảng thị trường nhà ở. Năm 2025: Bắt đầu phục hồi, GDP tăng trưởng trở lại. Năm 2026: Nền kinh tế ổn định dần nhưng còn nhiều bất định. Kết luận: Kinh tế Úc đang hướng tới hạ cánh mềm.";
+        loadVoices();
+        
+        const reportText = "Chào mừng bạn đến với không gian sáng tạo của Trang Nê. Sau đây là báo cáo Toàn cảnh Kinh tế Úc. Giai đoạn 20 23: Tăng trưởng chậm lại, chịu áp lực từ chi phí sinh hoạt. Năm 20 24: Giai đoạn khó khăn nhất với khủng hoảng thị trường nhà ở. Năm 20 25: Bắt đầu phục hồi, GDP tăng trưởng trở lại. Năm 20 26: Nền kinh tế ổn định dần nhưng còn nhiều bất định. Kết luận: Kinh tế Úc đang hướng tới hạ cánh mềm.";
 
         function toggleVoice() {
             if (synth.speaking) {
-                synth.cancel();
+                synth.cancel(); 
                 isVoicePlaying = false;
                 document.getElementById('voice-icon').className = 'fas fa-microphone-slash';
+                audio.volume = NORMAL_MUSIC_VOLUME; // Trả lại âm lượng nhạc
             } else {
                 let utterance = new SpeechSynthesisUtterance(reportText);
                 utterance.lang = 'vi-VN';
+                utterance.volume = 1.0; // Đẩy tiếng đọc lên mức to nhất
                 utterance.rate = 1.0; 
-                utterance.pitch = 1.3; // Chỉnh cao độ lên một xíu cho giọng dễ thương hơn
+                utterance.pitch = 1.15; // Tăng độ cao giọng lên chút cho trong trẻo, dễ thương
                 
-                // Thuật toán tìm giọng tốt nhất (Ưu tiên giọng Nữ miền Nam nếu máy có hỗ trợ)
-                if (viVoices.length > 0) {
-                    let bestVoice = viVoices.find(v => v.name.includes('HoaiMy')) || // Giọng nữ miền Nam cực xịn trên Microsoft Edge
-                                    viVoices.find(v => v.name.includes('Female')) || 
-                                    viVoices.find(v => v.name.includes('Natural')) ||
-                                    viVoices[0]; // Nếu không có, đành lấy giọng mặc định của máy
-                    utterance.voice = bestVoice;
+                if(vietnameseFemaleVoice) {
+                    utterance.voice = vietnameseFemaleVoice;
                 }
                 
                 utterance.onend = function() {
                     isVoicePlaying = false;
                     document.getElementById('voice-icon').className = 'fas fa-microphone-slash';
+                    audio.volume = NORMAL_MUSIC_VOLUME; // Trả lại âm lượng nhạc khi đọc xong
                 };
                 
+                audio.volume = DUCKED_MUSIC_VOLUME; // Hạ nhạc nền xuống
                 synth.speak(utterance);
                 isVoicePlaying = true;
                 document.getElementById('voice-icon').className = 'fas fa-microphone';
             }
         }
 
-        // --- HỆ THỐNG ÂM NHẠC & SCROLL ---
-        const audio = document.getElementById('lofi-audio');
-        audio.volume = 0.4;
-        let isPlaying = false;
+        // --- 3. AUTO SCROLL ---
         let autoScrollInterval;
         let isAutoScrolling = false;
 
@@ -292,7 +303,7 @@
             if (isAutoScrolling) return;
             isAutoScrolling = true;
             autoScrollInterval = setInterval(() => {
-                window.scrollBy(0, 1.5);
+                window.scrollBy(0, 1.2);
                 if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 5) {
                     stopAutoScroll();
                 }
@@ -311,17 +322,20 @@
         window.addEventListener('keydown', stopAutoScroll);
         window.addEventListener('mousedown', stopAutoScroll);
 
-        // --- KHỞI CHẠY TRẢI NGHIỆM ---
+        // --- 4. START EXPERIENCE ---
         function startExperience() {
             const splash = document.getElementById('splash-screen');
             splash.style.opacity = '0';
             setTimeout(() => { splash.style.visibility = 'hidden'; }, 800);
             
+            audio.volume = NORMAL_MUSIC_VOLUME;
             audio.play().catch(() => console.log("Trình duyệt chặn nhạc"));
             isPlaying = true;
             document.getElementById('audio-icon').className = 'fas fa-pause';
             
+            // Bật giọng đọc ngay lập tức
             toggleVoice();
+
             setTimeout(typeWriter, 500);
             setTimeout(startAutoScroll, 3500);
         }
@@ -332,6 +346,7 @@
             isPlaying = !isPlaying;
         }
 
+        // --- 5. UI/UX TOOLS ---
         AOS.init({ duration: 800, offset: 100 });
         if(window.innerWidth > 768) {
             VanillaTilt.init(document.querySelectorAll(".tilt-card"), { max: 4, speed: 400, glare: true, "max-glare": 0.15 });
@@ -392,15 +407,16 @@
         }, { threshold: 0.5 });
         footerObserver.observe(document.getElementById('site-footer'));
 
-        // --- VẼ BIỂU ĐỒ CHUYỂN ĐỘNG SIÊU CHẬM (6 GIÂY) ---
+        // --- 6. VẼ BIỂU ĐỒ CHUYỂN ĐỘNG SIÊU CHẬM (6 GIÂY) ---
         let chartRendered = false;
         let gdpChart;
         
         const chartObserver = new IntersectionObserver((entries) => {
+            // Ngưỡng 0.6: Ép biểu đồ phải nằm LỘ DIỆN 60% TRÊN MÀN HÌNH mới vẽ
             if(entries[0].isIntersecting && !chartRendered) {
                 chartRendered = true;
                 const wrapper = document.getElementById('chart-trigger');
-                wrapper.classList.add('visible');
+                wrapper.classList.add('visible'); 
                 
                 setTimeout(() => {
                     const ctx = document.getElementById('gdpChart').getContext('2d');
@@ -431,7 +447,7 @@
                             responsive: true,
                             maintainAspectRatio: false,
                             animation: {
-                                duration: 6000, 
+                                duration: 6000, // TĂNG LÊN 6 GIÂY ĐỂ NHÌN RÕ RÀNG SỰ CHUYỂN ĐỘNG
                                 easing: 'easeOutQuart'
                             },
                             plugins: {
@@ -447,7 +463,7 @@
                     if(isDark) updateChartTheme();
                 }, 500);
             }
-        }, { threshold: 0.6 });
+        }, { threshold: 0.6 }); // Bắt buộc phải lọt 60% vào màn hình
         
         chartObserver.observe(document.getElementById('chart-section'));
 
