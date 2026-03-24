@@ -37,7 +37,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Quicksand', sans-serif;
-            cursor: none; /* Ẩn chuột mặc định để dùng Custom Cursor */
+            cursor: none;
         }
 
         body {
@@ -47,26 +47,20 @@
             overflow-x: hidden;
         }
 
-        /* Bôi đen văn bản */
         ::selection {
             background-color: var(--primary-pink);
             color: white;
         }
 
-        /* Thanh tiến trình đọc */
         #progress-bar {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 4px;
+            top: 0; left: 0; width: 0%; height: 4px;
             background-color: var(--primary-pink);
             z-index: 9999;
             box-shadow: var(--neon-shadow);
             transition: width 0.1s;
         }
 
-        /* Preloader */
         #preloader {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -86,14 +80,11 @@
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* Custom Cursor */
         .cursor {
             width: 20px; height: 20px;
             border: 2px solid var(--primary-pink);
             border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
+            position: fixed; pointer-events: none; z-index: 9999;
             transform: translate(-50%, -50%);
             transition: width 0.2s, height 0.2s, background-color 0.2s;
         }
@@ -101,188 +92,94 @@
             width: 8px; height: 8px;
             background-color: var(--primary-pink);
             border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
+            position: fixed; pointer-events: none; z-index: 9998;
             transform: translate(-50%, -50%);
             transition: 0.1s ease-out;
         }
 
-        /* Glassmorphism Navbar */
         nav {
-            position: fixed;
-            top: 0; width: 100%;
-            padding: 15px 50px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
+            position: fixed; top: 0; width: 100%; padding: 15px 50px;
+            background: var(--glass-bg); backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             z-index: 1000;
         }
         .theme-toggle {
-            background: none; border: none;
-            font-size: 24px; color: var(--primary-pink);
-            cursor: none; /* Vẫn ẩn chuột vì dùng custom */
+            background: none; border: none; font-size: 24px; color: var(--primary-pink); cursor: none;
         }
 
-        /* Marquee Text */
         .marquee {
-            width: 100%;
-            background: var(--primary-pink);
-            color: white;
-            padding: 10px 0;
-            overflow: hidden;
-            white-space: nowrap;
-            margin-top: 60px;
+            width: 100%; background: var(--primary-pink); color: white;
+            padding: 10px 0; overflow: hidden; white-space: nowrap; margin-top: 60px;
         }
         .marquee-content {
-            display: inline-block;
-            animation: marquee 15s linear infinite;
-            font-weight: bold;
+            display: inline-block; animation: marquee 15s linear infinite; font-weight: bold;
         }
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        /* Hero Section */
         .hero {
-            min-height: 40vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            position: relative;
+            min-height: 40vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            padding: 20px; position: relative;
         }
         .typing-text {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--primary-pink);
-            text-shadow: var(--neon-shadow);
-            margin-bottom: 10px;
+            font-size: 2.5rem; font-weight: bold; color: var(--primary-pink);
+            text-shadow: var(--neon-shadow); margin-bottom: 10px;
         }
 
-        /* Timeline & Glass Cards */
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
         .timeline-item {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 40px;
-            box-shadow: var(--card-shadow);
-            transform-style: preserve-3d;
-            position: relative;
+            background: var(--glass-bg); backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 30px; margin-bottom: 40px; box-shadow: var(--card-shadow);
+            transform-style: preserve-3d; position: relative;
         }
-        .timeline-item h2 {
-            color: var(--primary-pink);
-            margin-bottom: 15px;
-            font-size: 1.8rem;
-            transform: translateZ(30px); /* 3D effect */
-        }
-        .timeline-item p, .timeline-item ul {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 10px;
-            transform: translateZ(20px);
-        }
-        .timeline-item ul {
-            padding-left: 20px;
-        }
-        .image-placeholder {
+        .timeline-item h2 { color: var(--primary-pink); margin-bottom: 15px; font-size: 1.8rem; transform: translateZ(30px); }
+        .timeline-item p, .timeline-item ul { font-size: 1.1rem; line-height: 1.6; margin-bottom: 10px; transform: translateZ(20px); }
+        .timeline-item ul { padding-left: 20px; }
+        
+        /* Chỉnh lại style cho ảnh thật */
+        .content-image {
             width: 100%;
-            height: 200px;
-            background: rgba(255, 105, 180, 0.1);
-            border: 2px dashed var(--primary-pink);
+            height: auto;
+            max-height: 350px;
+            object-fit: cover;
             border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             margin-top: 20px;
-            font-style: italic;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transform: translateZ(20px);
+            transition: transform 0.3s;
+        }
+        .content-image:hover {
+            transform: translateZ(30px) scale(1.02);
         }
 
-        /* Footer & Social */
         .social-sticky {
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 100;
+            position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 15px; z-index: 100;
         }
-        .social-sticky a {
-            color: var(--primary-pink);
-            font-size: 24px;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .social-sticky a:hover {
-            transform: scale(1.2);
-            text-shadow: var(--neon-shadow);
-        }
+        .social-sticky a { color: var(--primary-pink); font-size: 24px; text-decoration: none; transition: 0.3s; }
+        .social-sticky a:hover { transform: scale(1.2); text-shadow: var(--neon-shadow); }
 
-        footer {
-            text-align: center;
-            padding: 40px;
-            margin-top: 50px;
-            border-top: 1px solid var(--glass-border);
-            font-size: 1.2rem;
-        }
-        .design-by {
-            color: var(--primary-pink);
-            font-weight: bold;
-            position: relative;
-        }
-        .design-by:hover {
-            text-shadow: var(--neon-shadow);
-        }
+        footer { text-align: center; padding: 40px; margin-top: 50px; border-top: 1px solid var(--glass-border); font-size: 1.2rem; }
+        .design-by { color: var(--primary-pink); font-weight: bold; position: relative; }
+        .design-by:hover { text-shadow: var(--neon-shadow); }
 
-        /* Tools Bottom Left */
         .tools-bottom {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            display: flex;
-            gap: 15px;
-            z-index: 100;
+            position: fixed; bottom: 20px; left: 20px; display: flex; gap: 15px; z-index: 100;
         }
         .tool-btn {
-            background: var(--glass-bg);
-            border: 1px solid var(--primary-pink);
-            color: var(--primary-pink);
-            width: 45px; height: 45px;
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 18px;
-            backdrop-filter: blur(5px);
+            background: var(--glass-bg); border: 1px solid var(--primary-pink); color: var(--primary-pink);
+            width: 45px; height: 45px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; font-size: 18px; backdrop-filter: blur(5px);
         }
 
-        /* Pink Easter Egg Flash */
-        .pink-flash {
-            animation: neonFlash 0.5s 4 alternate;
-        }
-        @keyframes neonFlash {
-            from { background-color: var(--bg-color); }
-            to { background-color: #ff1493; }
-        }
+        .pink-flash { animation: neonFlash 0.5s 4 alternate; }
+        @keyframes neonFlash { from { background-color: var(--bg-color); } to { background-color: #ff1493; } }
 
         @media (max-width: 768px) {
-            .cursor, .cursor-trail { display: none; }
-            * { cursor: auto; }
+            .cursor, .cursor-trail { display: none; } * { cursor: auto; }
             .theme-toggle, .tool-btn { cursor: pointer; }
         }
     </style>
@@ -290,9 +187,7 @@
 <body>
 
     <div id="preloader"><div class="spinner"></div></div>
-
     <div id="progress-bar"></div>
-
     <div class="cursor"></div>
     <div class="cursor-trail"></div>
 
@@ -322,7 +217,8 @@
         <div class="tool-btn" onclick="toggleAudio()"><i class="fas fa-music" id="audio-icon"></i></div>
         <div class="tool-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="fas fa-arrow-up"></i></div>
     </div>
-    <audio id="lofi-audio" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+    
+    <audio id="lofi-audio" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"></audio>
 
     <div class="container">
 
@@ -339,9 +235,7 @@
                 </li>
             </ul>
             <p><strong>👉 Đặc điểm:</strong> “hạ nhiệt sau giai đoạn phục hồi hậu COVID”</p>
-            <div class="image-placeholder">
-                
-            </div>
+            <img class="content-image" src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=800&auto=format&fit=crop" alt="Australia 2023">
         </div>
 
         <div class="timeline-item tilt-card" data-aos="fade-up">
@@ -357,9 +251,7 @@
                 </li>
             </ul>
             <p><strong>👉 Đặc điểm:</strong> “khủng hoảng chi phí sinh hoạt”</p>
-            <div class="image-placeholder">
-                
-            </div>
+            <img class="content-image" src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop" alt="Economy 2024">
         </div>
 
         <div class="timeline-item tilt-card" data-aos="fade-up">
@@ -377,9 +269,7 @@
             </ul>
             <p><strong>👉 Tuy nhiên:</strong> Người dân vẫn thắt chặt chi tiêu. Áp lực giá cả chưa hoàn toàn biến mất.</p>
             <p><strong>👉 Đặc điểm:</strong> “phục hồi nhưng chưa mạnh”</p>
-            <div class="image-placeholder">
-                
-            </div>
+            <img class="content-image" src="https://images.unsplash.com/photo-1533421821268-87e42c1d70b0?q=80&w=800&auto=format&fit=crop" alt="Recovery 2025">
         </div>
 
         <div class="timeline-item tilt-card" data-aos="fade-up">
@@ -391,9 +281,7 @@
             </ul>
             <p><strong>👉 Rủi ro chính:</strong> Xung đột địa chính trị (giá dầu tăng), Lãi suất cao kéo dài, Chi phí sinh hoạt vẫn cao.</p>
             <p><strong>👉 Đặc điểm:</strong> “ổn định dần nhưng còn nhiều bất định”</p>
-            <div class="image-placeholder">
-                
-            </div>
+            <img class="content-image" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop" alt="Future 2026">
         </div>
 
         <div class="timeline-item tilt-card" data-aos="fade-up">
@@ -421,7 +309,6 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
-        // 1. Preloader
         window.onload = () => {
             setTimeout(() => {
                 document.getElementById('preloader').style.opacity = '0';
@@ -429,15 +316,12 @@
             }, 1000);
         };
 
-        // 2. Animate On Scroll (AOS)
         AOS.init({ duration: 1000, once: true });
 
-        // 3. 3D Tilt Effect
         VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
             max: 5, speed: 400, glare: true, "max-glare": 0.2
         });
 
-        // 4. Dark/Light Mode
         let isDark = false;
         function toggleTheme() {
             isDark = !isDark;
@@ -445,7 +329,6 @@
             document.querySelector('.theme-toggle i').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
         }
 
-        // 5. Reading Progress Bar
         window.onscroll = function() {
             let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -453,7 +336,6 @@
             document.getElementById("progress-bar").style.width = scrolled + "%";
         };
 
-        // 6. Custom Cursor
         const cursor = document.querySelector('.cursor');
         const trail = document.querySelector('.cursor-trail');
         document.addEventListener('mousemove', (e) => {
@@ -465,21 +347,17 @@
             }, 50);
         });
 
-        // Hover hiệu ứng cho cursor
         document.querySelectorAll('a, button, .tilt-card, .design-by, .tool-btn').forEach(el => {
             el.addEventListener('mouseenter', () => {
-                cursor.style.width = '40px';
-                cursor.style.height = '40px';
+                cursor.style.width = '40px'; cursor.style.height = '40px';
                 cursor.style.backgroundColor = 'rgba(255, 105, 180, 0.2)';
             });
             el.addEventListener('mouseleave', () => {
-                cursor.style.width = '20px';
-                cursor.style.height = '20px';
+                cursor.style.width = '20px'; cursor.style.height = '20px';
                 cursor.style.backgroundColor = 'transparent';
             });
         });
 
-        // 7. Lời chào thông minh (Dynamic Greeting) & Typing Effect
         const hour = new Date().getHours();
         let greetingText = "Chào buổi sáng rực rỡ!";
         if(hour >= 12 && hour < 18) greetingText = "Một buổi chiều năng lượng nhé!";
@@ -495,7 +373,6 @@
         }
         setTimeout(typeWriter, 1500);
 
-        // 8. Lofi Audio Player
         const audio = document.getElementById('lofi-audio');
         let isPlaying = false;
         function toggleAudio() {
@@ -509,17 +386,10 @@
             isPlaying = !isPlaying;
         }
 
-        // 9. Confetti Easter Egg (Click Design by TrangNee)
         document.getElementById('trangnee-btn').addEventListener('click', () => {
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.8 },
-                colors: ['#ff69b4', '#ff1493', '#ffffff']
-            });
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.8 }, colors: ['#ff69b4', '#ff1493', '#ffffff'] });
         });
 
-        // 10. Text Easter Egg (Gõ 'pink')
         let typedStr = "";
         window.addEventListener('keydown', (e) => {
             typedStr += e.key.toLowerCase();
@@ -527,7 +397,7 @@
             if(typedStr === "pink") {
                 document.body.classList.add('pink-flash');
                 setTimeout(() => document.body.classList.remove('pink-flash'), 2000);
-                typedStr = ""; // reset
+                typedStr = ""; 
             }
         });
 
