@@ -37,11 +37,25 @@
         body { background-color: var(--bg-color); color: var(--text-color); transition: all 0.5s ease; overflow-x: hidden; }
         ::selection { background-color: var(--primary-pink); color: white; }
 
-        #progress-bar { position: fixed; top: 0; left: 0; width: 0%; height: 4px; background-color: var(--primary-pink); z-index: 9999; box-shadow: var(--neon-shadow); transition: width 0.1s; }
-        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 10000; transition: opacity 0.5s; }
-        .spinner { width: 50px; height: 50px; border: 5px solid var(--glass-bg); border-top: 5px solid var(--primary-pink); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        /* MÀN HÌNH CHÀO (MỚI) - Giúp lách luật Autoplay nhạc */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); z-index: 99999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+        #splash-screen h1 { color: var(--primary-pink); margin-bottom: 20px; font-size: 2.5rem; text-shadow: var(--neon-shadow); text-align: center; padding: 0 20px;}
+        .start-btn {
+            background: var(--primary-pink); color: white; font-size: 1.2rem; font-weight: bold;
+            padding: 15px 40px; border: none; border-radius: 50px;
+            box-shadow: 0 10px 20px rgba(255, 105, 180, 0.4);
+            transition: 0.3s; animation: pulseBtn 2s infinite;
+        }
+        .start-btn:hover { transform: scale(1.1); box-shadow: 0 15px 25px rgba(255, 105, 180, 0.6); }
+        @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
+        #progress-bar { position: fixed; top: 0; left: 0; width: 0%; height: 4px; background-color: var(--primary-pink); z-index: 9999; box-shadow: var(--neon-shadow); transition: width 0.1s; }
+        
         .cursor { width: 20px; height: 20px; border: 2px solid var(--primary-pink); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background-color 0.2s; }
         .cursor-trail { width: 8px; height: 8px; background-color: var(--primary-pink); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: 0.1s ease-out; }
 
@@ -65,21 +79,16 @@
         .timeline-item li { transition: 0.3s ease; margin-bottom: 8px; list-style-position: inside;}
         .timeline-item li:hover { color: var(--primary-pink); transform: translateX(10px) translateZ(25px); font-weight: bold; }
 
-        /* Lưới 3 ảnh tự động vừa vặn */
         .image-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 25px; transform: translateZ(25px); }
-        
         .content-image { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; box-shadow: 0 8px 15px rgba(0,0,0,0.15); animation: float 6s ease-in-out infinite; transition: transform 0.4s ease, filter 0.4s ease, box-shadow 0.4s; }
         
-        .img-delay-1 { animation-delay: 0s; }
-        .img-delay-2 { animation-delay: 1.5s; }
-        .img-delay-3 { animation-delay: 3s; }
-
+        .img-delay-1 { animation-delay: 0s; } .img-delay-2 { animation-delay: 1.5s; } .img-delay-3 { animation-delay: 3s; }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
         
         .content-image:hover { animation-play-state: paused; transform: scale(1.15) rotate(3deg) !important; filter: brightness(1.1); box-shadow: 0 15px 30px var(--primary-pink); z-index: 10; position: relative; }
 
-        .chart-wrapper { transform: translateZ(20px); transition: 0.4s ease; border-radius: 15px; padding: 10px; opacity: 0; }
-        .chart-wrapper.visible { opacity: 1; }
+        /* Đảm bảo khung biểu đồ có chiều cao cố định để Observer bắt diện tích chuẩn */
+        .chart-wrapper { min-height: 40vh; transform: translateZ(20px); transition: 0.4s ease; border-radius: 15px; padding: 10px; }
         .chart-wrapper:hover { transform: translateZ(40px) scale(1.03); background: var(--glass-bg); box-shadow: 0 0 20px var(--primary-pink); }
         .chart-container { position: relative; height: 40vh; width: 100%; margin-top: 20px; }
 
@@ -98,15 +107,13 @@
         .pink-flash { animation: neonFlash 0.5s 4 alternate; }
         @keyframes neonFlash { from { background-color: var(--bg-color); } to { background-color: #ff1493; } }
 
-        /* Responsive Mobile */
         @media (max-width: 768px) {
             .cursor, .cursor-trail { display: none; }
             * { cursor: auto !important; }
-            .theme-toggle, .tool-btn, .design-by { cursor: pointer !important; }
+            .theme-toggle, .tool-btn, .design-by, .start-btn { cursor: pointer !important; }
             .timeline-item { padding: 20px; margin-bottom: 30px; }
             .social-sticky { display: none; }
-            .chart-container { height: 30vh; }
-            /* Chuyển 3 ảnh thành xếp dọc trên điện thoại cho đỡ nhỏ */
+            .chart-container, .chart-wrapper { height: 30vh; min-height: 30vh; }
             .image-grid { grid-template-columns: 1fr; } 
             .content-image { height: 200px; }
         }
@@ -114,7 +121,11 @@
 </head>
 <body>
 
-    <div id="preloader"><div class="spinner"></div></div>
+    <div id="splash-screen">
+        <h1>Sẵn sàng khám phá báo cáo chưa?</h1>
+        <button class="start-btn" onclick="startExperience()">Khám phá ngay</button>
+    </div>
+
     <div id="progress-bar"></div>
     <div class="cursor"></div>
     <div class="cursor-trail"></div>
@@ -146,7 +157,7 @@
         <div class="tool-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Lên đầu trang"><i class="fas fa-arrow-up"></i></div>
     </div>
     
-    <audio id="lofi-audio" loop autoplay src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=upbeat-pop-daylight-112028.mp3"></audio>
+    <audio id="lofi-audio" loop src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=upbeat-pop-daylight-112028.mp3"></audio>
 
     <div class="container">
 
@@ -160,11 +171,10 @@
                 <li>• Thu nhập thực tế của người dân giảm, tiêu dùng yếu.</li>
             </ul>
             <p data-aos="fade-up" data-aos-delay="200"><strong>👉 Đặc điểm:</strong> “hạ nhiệt sau giai đoạn phục hồi hậu COVID”</p>
-            
             <div class="image-grid">
-                <img class="content-image img-delay-1" src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&q=80" alt="Finance">
-                <img class="content-image img-delay-2" src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=600&q=80" alt="Sydney Opera">
-                <img class="content-image img-delay-3" src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&q=80" alt="Chart Down">
+                <img class="content-image img-delay-1" src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=600&q=80" alt="Finance">
+                <img class="content-image img-delay-2" src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=600&q=80" alt="Sydney Opera">
+                <img class="content-image img-delay-3" src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80" alt="Chart Down">
             </div>
         </div>
 
@@ -178,11 +188,10 @@
                 <li>• Thu nhập thực tế giảm mạnh.</li>
             </ul>
             <p data-aos="fade-up" data-aos-delay="200"><strong>👉 Đặc điểm:</strong> “khủng hoảng chi phí sinh hoạt”</p>
-            
             <div class="image-grid">
-                <img class="content-image img-delay-2" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80" alt="Housing">
-                <img class="content-image img-delay-3" src="https://images.unsplash.com/photo-1604594849809-dfedbc827105?w=600&q=80" alt="Empty Wallet">
-                <img class="content-image img-delay-1" src="https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=600&q=80" alt="Data Analytics">
+                <img class="content-image img-delay-2" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80" alt="Housing">
+                <img class="content-image img-delay-3" src="https://images.unsplash.com/photo-1604594849809-dfedbc827105?auto=format&fit=crop&w=600&q=80" alt="Empty Wallet">
+                <img class="content-image img-delay-1" src="https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&w=600&q=80" alt="Data Analytics">
             </div>
         </div>
 
@@ -197,11 +206,10 @@
                 <li>• Lạm phát giảm về khoảng ~2,7%.</li>
             </ul>
             <p data-aos="fade-up" data-aos-delay="200"><strong>👉 Tuy nhiên:</strong> Người dân vẫn thắt chặt chi tiêu. Áp lực giá cả chưa hoàn toàn biến mất.</p>
-            
             <div class="image-grid">
-                <img class="content-image img-delay-3" src="https://images.unsplash.com/photo-1533421821268-87e42c1d70b0?w=600&q=80" alt="Plant Growth">
-                <img class="content-image img-delay-1" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&q=80" alt="Investment">
-                <img class="content-image img-delay-2" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" alt="Australia Beach">
+                <img class="content-image img-delay-3" src="https://images.unsplash.com/photo-1533421821268-87e42c1d70b0?auto=format&fit=crop&w=600&q=80" alt="Plant Growth">
+                <img class="content-image img-delay-1" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80" alt="Investment">
+                <img class="content-image img-delay-2" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80" alt="Australia Beach">
             </div>
         </div>
 
@@ -213,11 +221,10 @@
                 <li>Lạm phát: Đang giảm nhưng vẫn dễ biến động. Có nguy cơ tăng lại do giá năng lượng toàn cầu.</li>
             </ul>
             <p data-aos="fade-up" data-aos-delay="200"><strong>👉 Rủi ro chính:</strong> Xung đột địa chính trị, Lãi suất cao kéo dài, Chi phí sinh hoạt vẫn cao.</p>
-            
             <div class="image-grid">
-                <img class="content-image img-delay-1" src="https://images.unsplash.com/photo-1528072164453-f4e8ef0d475a?w=600&q=80" alt="Modern Sydney">
-                <img class="content-image img-delay-3" src="https://images.unsplash.com/photo-1494252713559-f26b4fb0c159?w=600&q=80" alt="Future Sky">
-                <img class="content-image img-delay-2" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80" alt="Data Chart">
+                <img class="content-image img-delay-1" src="https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?auto=format&fit=crop&w=600&q=80" alt="Australia Landscape">
+                <img class="content-image img-delay-3" src="https://images.unsplash.com/photo-1518152006812-edab29b069ac?auto=format&fit=crop&w=600&q=80" alt="Skyline">
+                <img class="content-image img-delay-2" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Future Work">
             </div>
         </div>
 
@@ -255,13 +262,33 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
-        // Preloader
-        window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('preloader').style.opacity = '0';
-                setTimeout(() => document.getElementById('preloader').style.display = 'none', 500);
-            }, 800);
-        };
+        // --- XỬ LÝ MÀN HÌNH CHÀO & BẬT NHẠC ---
+        const audio = document.getElementById('lofi-audio');
+        audio.volume = 0.6;
+        let isPlaying = false;
+
+        function startExperience() {
+            // Ẩn màn hình Splash
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => { splash.style.visibility = 'hidden'; }, 800);
+            
+            // Bật nhạc ngay lập tức
+            audio.play().catch(() => console.log("Trình duyệt vẫn chưa cho phép nhạc"));
+            isPlaying = true;
+            document.getElementById('audio-icon').className = 'fas fa-pause';
+            
+            // Khởi chạy hiệu ứng chữ
+            setTimeout(typeWriter, 500);
+        }
+
+        // Đồng bộ icon khi nhạc phát/tạm dừng
+        audio.onplay = () => { document.getElementById('audio-icon').className = 'fas fa-pause'; isPlaying = true; };
+        audio.onpause = () => { document.getElementById('audio-icon').className = 'fas fa-music'; isPlaying = false; };
+
+        function toggleAudio() {
+            if(isPlaying) { audio.pause(); } else { audio.play(); }
+        }
 
         // AOS Animations
         AOS.init({ duration: 800, offset: 100 });
@@ -316,7 +343,6 @@
         let greetingText = "Chào ngày mới tràn đầy năng lượng!";
         if(hour >= 12 && hour < 18) greetingText = "Một buổi chiều rực rỡ nhé!";
         else if(hour >= 18) greetingText = "Tối nay quẩy thôi!";
-
         let i = 0;
         function typeWriter() {
             if (i < greetingText.length) {
@@ -324,39 +350,11 @@
                 i++; setTimeout(typeWriter, 80);
             }
         }
-        setTimeout(typeWriter, 1200);
-
-        // --- XỬ LÝ NHẠC AUTOPLAY LÁCH LUẬT TRÌNH DUYỆT ---
-        const audio = document.getElementById('lofi-audio');
-        audio.volume = 0.6;
-        let isMusicInteracted = false;
-
-        // Đồng bộ icon khi nhạc đang phát thật sự
-        audio.onplay = () => { document.getElementById('audio-icon').className = 'fas fa-pause'; };
-        audio.onpause = () => { document.getElementById('audio-icon').className = 'fas fa-music'; };
-
-        function toggleAudio() {
-            if(!audio.paused) { audio.pause(); } else { audio.play(); }
-            isMusicInteracted = true;
-        }
-
-        // Bắt sự kiện click/scroll đầu tiên của người dùng để kích hoạt nhạc
-        const playMusicOnce = () => {
-            if (!isMusicInteracted && audio.paused) {
-                audio.play().catch(() => { /* Bỏ qua lỗi nếu trình duyệt vẫn chặn */ });
-                isMusicInteracted = true;
-            }
-        };
-        document.body.addEventListener('click', playMusicOnce, { once: true });
-        document.body.addEventListener('scroll', playMusicOnce, { once: true });
-        window.addEventListener('scroll', playMusicOnce, { once: true });
-
 
         // --- HỆ THỐNG PHÁO GIẤY ---
         function fireConfetti() {
             confetti({ particleCount: 200, spread: 100, origin: { y: 0.8 }, colors: ['#ff69b4', '#ff1493', '#ffffff', '#ffd700', '#00ffff'] });
         }
-
         document.getElementById('trangnee-btn').addEventListener('click', fireConfetti);
 
         let autoConfettiFired = false;
@@ -385,14 +383,14 @@
             }
         });
 
-        // --- VẼ BIỂU ĐỒ KHI CUỘN TỚI (SCROLL TRIGGER) ---
+        // --- VẼ BIỂU ĐỒ KHI CUỘN TỚI ---
         let chartRendered = false;
         let gdpChart;
         
         const chartObserver = new IntersectionObserver((entries) => {
+            // Khi vùng chứa biểu đồ bắt đầu xuất hiện trên màn hình
             if(entries[0].isIntersecting && !chartRendered) {
                 chartRendered = true;
-                document.getElementById('chart-trigger').classList.add('visible'); // Hiện mượt mà
                 
                 const ctx = document.getElementById('gdpChart').getContext('2d');
                 let gradient = ctx.createLinearGradient(0, 0, 0, 400);
@@ -421,7 +419,10 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        animation: { duration: 2500, easing: 'easeOutQuart' }, // Hiệu ứng vẽ từ từ
+                        animation: {
+                            duration: 2500, // Vẽ từ từ trong 2.5 giây
+                            easing: 'easeOutQuart'
+                        },
                         plugins: {
                             legend: { labels: { color: '#333', font: { family: 'Quicksand', size: 14, weight: 'bold' } } },
                             tooltip: { backgroundColor: 'rgba(255, 20, 147, 0.9)', titleFont: { family: 'Quicksand', size: 14 }, bodyFont: { family: 'Quicksand', size: 14, weight: 'bold' }, padding: 12, displayColors: false }
@@ -434,7 +435,7 @@
                 });
                 if(isDark) updateChartTheme();
             }
-        }, { threshold: 0.4 }); // Kích hoạt khi cuộn tới 40% khu vực biểu đồ
+        }, { threshold: 0.1 }); // Kích hoạt ngay khi 10% biểu đồ lọt vào màn hình
         
         chartObserver.observe(document.getElementById('chart-trigger'));
 
