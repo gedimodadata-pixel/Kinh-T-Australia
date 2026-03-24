@@ -35,7 +35,6 @@
         body { background-color: var(--bg-color); color: var(--text-color); transition: all 0.5s ease; overflow-x: hidden; scroll-behavior: smooth; }
         ::selection { background-color: var(--primary-pink); color: white; }
 
-        /* SPLASH SCREEN */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s; }
         #splash-screen h1 { color: var(--primary-pink); margin-bottom: 20px; font-size: 2.5rem; text-shadow: var(--neon-shadow); text-align: center; padding: 0 20px;}
         .start-btn { background: var(--primary-pink); color: white; font-size: 1.2rem; font-weight: bold; padding: 15px 40px; border: none; border-radius: 50px; box-shadow: 0 10px 20px rgba(255, 105, 180, 0.4); transition: 0.3s; animation: pulseBtn 2s infinite; cursor: pointer !important; }
@@ -44,11 +43,9 @@
 
         #progress-bar { position: fixed; top: 0; left: 0; width: 0%; height: 4px; background-color: var(--primary-pink); z-index: 9999; box-shadow: var(--neon-shadow); transition: width 0.1s; }
         
-        /* Cursor */
         .cursor { width: 20px; height: 20px; border: 2px solid var(--primary-pink); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background-color 0.2s; }
         .cursor-trail { width: 8px; height: 8px; background-color: var(--primary-pink); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: 0.1s ease-out; }
 
-        /* Navbar & Marquee */
         nav { position: fixed; top: 0; width: 100%; padding: 15px 5%; background: var(--glass-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
         .theme-toggle { background: none; border: none; font-size: 24px; color: var(--primary-pink); transition: 0.3s; }
         .theme-toggle:hover { transform: rotate(30deg) scale(1.2); }
@@ -57,7 +54,6 @@
         .marquee-content { display: inline-block; animation: marquee 20s linear infinite; font-weight: bold; }
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        /* Sections */
         .hero { min-height: 45vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; position: relative; }
         .typing-text { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: bold; color: var(--primary-pink); text-shadow: var(--neon-shadow); margin-bottom: 15px; }
 
@@ -69,20 +65,17 @@
         .timeline-item li { transition: 0.3s ease; margin-bottom: 8px; list-style-position: inside;}
         .timeline-item li:hover { color: var(--primary-pink); transform: translateX(10px) translateZ(25px); font-weight: bold; }
 
-        /* Images */
         .image-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 25px; transform: translateZ(25px); }
         .content-image { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; box-shadow: 0 8px 15px rgba(0,0,0,0.15); animation: float 6s ease-in-out infinite; transition: transform 0.4s ease, filter 0.4s ease; }
         .img-delay-1 { animation-delay: 0s; } .img-delay-2 { animation-delay: 1.5s; } .img-delay-3 { animation-delay: 3s; }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
         .content-image:hover { animation-play-state: paused; transform: scale(1.15) rotate(3deg) !important; filter: brightness(1.1); box-shadow: 0 15px 30px var(--primary-pink); z-index: 10; position: relative; }
 
-        /* Chart */
         .chart-wrapper { min-height: 40vh; transform: translateZ(20px); transition: 0.4s ease; border-radius: 15px; padding: 10px; opacity: 0; }
         .chart-wrapper.visible { opacity: 1; }
         .chart-wrapper:hover { transform: translateZ(40px) scale(1.03); background: var(--glass-bg); box-shadow: 0 0 20px var(--primary-pink); }
         .chart-container { position: relative; height: 40vh; width: 100%; margin-top: 20px; }
 
-        /* Tools & Footer */
         .social-sticky { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 15px; z-index: 100; }
         .social-sticky a { color: var(--primary-pink); font-size: 24px; text-decoration: none; transition: 0.3s; display: block; }
         .social-sticky a:hover { transform: scale(1.3) translateX(-8px) rotate(-10deg); text-shadow: var(--neon-shadow); }
@@ -238,23 +231,44 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
-        // --- HỆ THỐNG ĐỌC VĂN BẢN (AI TTS) ---
+        // --- HỆ THỐNG ĐỌC VĂN BẢN (AI TTS) TỐI ƯU ---
         let synth = window.speechSynthesis;
         let isVoicePlaying = false;
+        let viVoices = [];
+
+        // Lấy danh sách giọng đọc từ hệ thống của người dùng
+        function populateVoiceList() {
+            let voices = synth.getVoices();
+            // Lọc ra các giọng hỗ trợ Tiếng Việt
+            viVoices = voices.filter(voice => voice.lang.includes('vi'));
+        }
         
-        // Kịch bản đọc tóm tắt
+        populateVoiceList();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = populateVoiceList;
+        }
+
         const reportText = "Chào mừng bạn đến với không gian sáng tạo của Trang Neee. Báo cáo Toàn cảnh Kinh tế Úc. Giai đoạn 2023: Tăng trưởng chậm lại, chịu áp lực từ chi phí sinh hoạt. Năm 2024: Giai đoạn khó khăn nhất với khủng hoảng thị trường nhà ở. Năm 2025: Bắt đầu phục hồi, GDP tăng trưởng trở lại. Năm 2026: Nền kinh tế ổn định dần nhưng còn nhiều bất định. Kết luận: Kinh tế Úc đang hướng tới hạ cánh mềm.";
 
         function toggleVoice() {
             if (synth.speaking) {
-                synth.cancel(); // Dừng đọc
+                synth.cancel();
                 isVoicePlaying = false;
                 document.getElementById('voice-icon').className = 'fas fa-microphone-slash';
             } else {
                 let utterance = new SpeechSynthesisUtterance(reportText);
-                utterance.lang = 'vi-VN'; // Giọng tiếng Việt
-                utterance.rate = 1.0; // Tốc độ chuẩn
-                utterance.pitch = 1.1; // Giọng hơi cao một chút cho tươi vui
+                utterance.lang = 'vi-VN';
+                utterance.rate = 1.0; 
+                utterance.pitch = 1.3; // Chỉnh cao độ lên một xíu cho giọng dễ thương hơn
+                
+                // Thuật toán tìm giọng tốt nhất (Ưu tiên giọng Nữ miền Nam nếu máy có hỗ trợ)
+                if (viVoices.length > 0) {
+                    let bestVoice = viVoices.find(v => v.name.includes('HoaiMy')) || // Giọng nữ miền Nam cực xịn trên Microsoft Edge
+                                    viVoices.find(v => v.name.includes('Female')) || 
+                                    viVoices.find(v => v.name.includes('Natural')) ||
+                                    viVoices[0]; // Nếu không có, đành lấy giọng mặc định của máy
+                    utterance.voice = bestVoice;
+                }
                 
                 utterance.onend = function() {
                     isVoicePlaying = false;
@@ -269,7 +283,7 @@
 
         // --- HỆ THỐNG ÂM NHẠC & SCROLL ---
         const audio = document.getElementById('lofi-audio');
-        audio.volume = 0.4; // Nhỏ lại xíu để nghe giọng đọc
+        audio.volume = 0.4;
         let isPlaying = false;
         let autoScrollInterval;
         let isAutoScrolling = false;
@@ -303,18 +317,12 @@
             splash.style.opacity = '0';
             setTimeout(() => { splash.style.visibility = 'hidden'; }, 800);
             
-            // 1. Bật Nhạc
             audio.play().catch(() => console.log("Trình duyệt chặn nhạc"));
             isPlaying = true;
             document.getElementById('audio-icon').className = 'fas fa-pause';
             
-            // 2. Bật Giọng đọc AI
             toggleVoice();
-
-            // 3. Hiệu ứng gõ chữ
             setTimeout(typeWriter, 500);
-
-            // 4. Bắt đầu trôi chuột sau 3.5 giây
             setTimeout(startAutoScroll, 3500);
         }
 
@@ -324,7 +332,6 @@
             isPlaying = !isPlaying;
         }
 
-        // --- UI/UX TOOLS ---
         AOS.init({ duration: 800, offset: 100 });
         if(window.innerWidth > 768) {
             VanillaTilt.init(document.querySelectorAll(".tilt-card"), { max: 4, speed: 400, glare: true, "max-glare": 0.15 });
@@ -390,13 +397,11 @@
         let gdpChart;
         
         const chartObserver = new IntersectionObserver((entries) => {
-            // Ngưỡng 0.6: Ép biểu đồ phải nằm LỘ DIỆN 60% TRÊN MÀN HÌNH mới vẽ
             if(entries[0].isIntersecting && !chartRendered) {
                 chartRendered = true;
                 const wrapper = document.getElementById('chart-trigger');
-                wrapper.classList.add('visible'); // Hiện lên
+                wrapper.classList.add('visible');
                 
-                // Đợi thêm nửa giây để ánh mắt người dùng tập trung vào
                 setTimeout(() => {
                     const ctx = document.getElementById('gdpChart').getContext('2d');
                     let gradient = ctx.createLinearGradient(0, 0, 0, 400);
@@ -426,7 +431,7 @@
                             responsive: true,
                             maintainAspectRatio: false,
                             animation: {
-                                duration: 6000, // TĂNG LÊN 6 GIÂY ĐỂ NHÌN RÕ RÀNG SỰ CHUYỂN ĐỘNG
+                                duration: 6000, 
                                 easing: 'easeOutQuart'
                             },
                             plugins: {
@@ -442,7 +447,7 @@
                     if(isDark) updateChartTheme();
                 }, 500);
             }
-        }, { threshold: 0.6 }); // Bắt buộc phải lọt 60% vào màn hình
+        }, { threshold: 0.6 });
         
         chartObserver.observe(document.getElementById('chart-section'));
 
