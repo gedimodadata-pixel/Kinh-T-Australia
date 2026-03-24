@@ -34,10 +34,10 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Quicksand', sans-serif; cursor: none; }
-        body { background-color: var(--bg-color); color: var(--text-color); transition: all 0.5s ease; overflow-x: hidden; }
+        body { background-color: var(--bg-color); color: var(--text-color); transition: all 0.5s ease; overflow-x: hidden; scroll-behavior: smooth; }
         ::selection { background-color: var(--primary-pink); color: white; }
 
-        /* MÀN HÌNH CHÀO (MỚI) - Giúp lách luật Autoplay nhạc */
+        /* SPLASH SCREEN */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); z-index: 99999;
@@ -47,7 +47,7 @@
         #splash-screen h1 { color: var(--primary-pink); margin-bottom: 20px; font-size: 2.5rem; text-shadow: var(--neon-shadow); text-align: center; padding: 0 20px;}
         .start-btn {
             background: var(--primary-pink); color: white; font-size: 1.2rem; font-weight: bold;
-            padding: 15px 40px; border: none; border-radius: 50px;
+            padding: 15px 40px; border: none; border-radius: 50px; cursor: none; /* custom cursor will handle this */
             box-shadow: 0 10px 20px rgba(255, 105, 180, 0.4);
             transition: 0.3s; animation: pulseBtn 2s infinite;
         }
@@ -87,7 +87,6 @@
         
         .content-image:hover { animation-play-state: paused; transform: scale(1.15) rotate(3deg) !important; filter: brightness(1.1); box-shadow: 0 15px 30px var(--primary-pink); z-index: 10; position: relative; }
 
-        /* Đảm bảo khung biểu đồ có chiều cao cố định để Observer bắt diện tích chuẩn */
         .chart-wrapper { min-height: 40vh; transform: translateZ(20px); transition: 0.4s ease; border-radius: 15px; padding: 10px; }
         .chart-wrapper:hover { transform: translateZ(40px) scale(1.03); background: var(--glass-bg); box-shadow: 0 0 20px var(--primary-pink); }
         .chart-container { position: relative; height: 40vh; width: 100%; margin-top: 20px; }
@@ -228,7 +227,7 @@
             </div>
         </div>
 
-        <div class="timeline-item tilt-card" data-aos="fade-up">
+        <div class="timeline-item tilt-card" data-aos="fade-up" id="chart-section">
             <h2>📊 5. Tổng kết xu hướng 2023–2026</h2>
             <ul data-aos="fade-right">
                 <li>2023–2024: ⬇️ Chậm lại, khó khăn</li>
@@ -262,27 +261,55 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
-        // --- XỬ LÝ MÀN HÌNH CHÀO & BẬT NHẠC ---
         const audio = document.getElementById('lofi-audio');
-        audio.volume = 0.6;
+        audio.volume = 0.5;
         let isPlaying = false;
+        let autoScrollInterval;
+        let isAutoScrolling = false;
 
+        // --- HỆ THỐNG AUTO-SCROLL NHƯ THƯỚC PHIM ---
+        function startAutoScroll() {
+            if (isAutoScrolling) return;
+            isAutoScrolling = true;
+            autoScrollInterval = setInterval(() => {
+                window.scrollBy(0, 1.2); // Tốc độ cuộn siêu mượt
+                
+                // Dừng cuộn khi chạm đáy trang
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 5) {
+                    stopAutoScroll();
+                }
+            }, 25);
+        }
+
+        function stopAutoScroll() {
+            if(isAutoScrolling) {
+                isAutoScrolling = false;
+                clearInterval(autoScrollInterval);
+            }
+        }
+
+        // Nhường quyền điều khiển ngay khi người dùng lướt web, dùng lăn chuột, hoặc phím mũi tên
+        window.addEventListener('wheel', stopAutoScroll);
+        window.addEventListener('touchstart', stopAutoScroll);
+        window.addEventListener('keydown', stopAutoScroll);
+        window.addEventListener('mousedown', stopAutoScroll);
+
+        // --- KHỞI CHẠY TRẢI NGHIỆM ---
         function startExperience() {
-            // Ẩn màn hình Splash
             const splash = document.getElementById('splash-screen');
             splash.style.opacity = '0';
             setTimeout(() => { splash.style.visibility = 'hidden'; }, 800);
             
-            // Bật nhạc ngay lập tức
-            audio.play().catch(() => console.log("Trình duyệt vẫn chưa cho phép nhạc"));
+            audio.play().catch(() => console.log("Trình duyệt chặn nhạc"));
             isPlaying = true;
             document.getElementById('audio-icon').className = 'fas fa-pause';
             
-            // Khởi chạy hiệu ứng chữ
             setTimeout(typeWriter, 500);
+
+            // Bắt đầu tự động cuộn sau 3 giây (khi người xem đã đọc xong lời chào)
+            setTimeout(startAutoScroll, 3000);
         }
 
-        // Đồng bộ icon khi nhạc phát/tạm dừng
         audio.onplay = () => { document.getElementById('audio-icon').className = 'fas fa-pause'; isPlaying = true; };
         audio.onpause = () => { document.getElementById('audio-icon').className = 'fas fa-music'; isPlaying = false; };
 
@@ -290,15 +317,13 @@
             if(isPlaying) { audio.pause(); } else { audio.play(); }
         }
 
-        // AOS Animations
+        // --- KHỞI TẠO HIỆU ỨNG (AOS, TILT) ---
         AOS.init({ duration: 800, offset: 100 });
-
-        // Tilt effect
         if(window.innerWidth > 768) {
             VanillaTilt.init(document.querySelectorAll(".tilt-card"), { max: 4, speed: 400, glare: true, "max-glare": 0.15 });
         }
 
-        // Theme
+        // --- CHẾ ĐỘ TỐI/SÁNG ---
         let isDark = false;
         function toggleTheme() {
             isDark = !isDark;
@@ -307,15 +332,14 @@
             if (typeof gdpChart !== 'undefined') updateChartTheme();
         }
 
-        // Progress
-        window.onscroll = function() {
+        // --- THANH TIẾN TRÌNH & CON TRỎ CHUỘT ---
+        window.addEventListener('scroll', function() {
             let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             let scrolled = (winScroll / height) * 100;
             document.getElementById("progress-bar").style.width = scrolled + "%";
-        };
+        });
 
-        // Custom Cursor
         if(window.innerWidth > 768) {
             const cursor = document.querySelector('.cursor');
             const trail = document.querySelector('.cursor-trail');
@@ -338,11 +362,11 @@
             });
         }
 
-        // Greeting
+        // --- HIỆU ỨNG GÕ CHỮ THÔNG MINH ---
         const hour = new Date().getHours();
         let greetingText = "Chào ngày mới tràn đầy năng lượng!";
         if(hour >= 12 && hour < 18) greetingText = "Một buổi chiều rực rỡ nhé!";
-        else if(hour >= 18) greetingText = "Tối nay quẩy thôi!";
+        else if(hour >= 18) greetingText = "Tối nay chill chill thư giãn thôi!";
         let i = 0;
         function typeWriter() {
             if (i < greetingText.length) {
@@ -371,7 +395,6 @@
         }, { threshold: 0.5 });
         footerObserver.observe(document.getElementById('site-footer'));
 
-        // Text Easter Egg
         let typedStr = "";
         window.addEventListener('keydown', (e) => {
             typedStr += e.key.toLowerCase();
@@ -383,61 +406,64 @@
             }
         });
 
-        // --- VẼ BIỂU ĐỒ KHI CUỘN TỚI ---
+        // --- VẼ BIỂU ĐỒ CHUYỂN ĐỘNG (ĐÃ FIX DELAY) ---
         let chartRendered = false;
         let gdpChart;
         
         const chartObserver = new IntersectionObserver((entries) => {
-            // Khi vùng chứa biểu đồ bắt đầu xuất hiện trên màn hình
+            // Khi vùng biểu đồ lọt vào 50% màn hình
             if(entries[0].isIntersecting && !chartRendered) {
                 chartRendered = true;
                 
-                const ctx = document.getElementById('gdpChart').getContext('2d');
-                let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                gradient.addColorStop(0, 'rgba(255, 105, 180, 0.6)'); 
-                gradient.addColorStop(1, 'rgba(255, 105, 180, 0.0)'); 
+                // ĐỢI 0.8 GIÂY MỚI VẼ - Để chắc chắn người xem F5 vẫn thấy được hiệu ứng
+                setTimeout(() => {
+                    const ctx = document.getElementById('gdpChart').getContext('2d');
+                    let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                    gradient.addColorStop(0, 'rgba(255, 105, 180, 0.6)'); 
+                    gradient.addColorStop(1, 'rgba(255, 105, 180, 0.0)'); 
 
-                gdpChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['2023', '2024 (Đáy)', '2025 (Phục hồi)', '2026 (Dự báo)'],
-                        datasets: [{
-                            label: 'Tăng trưởng GDP (%)',
-                            data: [1.5, 1.35, 2.3, 2.15], 
-                            borderColor: '#ff1493',
-                            backgroundColor: gradient,
-                            borderWidth: 4,
-                            pointBackgroundColor: '#fff',
-                            pointBorderColor: '#ff1493',
-                            pointBorderWidth: 3,
-                            pointRadius: 6,
-                            pointHoverRadius: 10,
-                            fill: true,
-                            tension: 0.4 
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        animation: {
-                            duration: 2500, // Vẽ từ từ trong 2.5 giây
-                            easing: 'easeOutQuart'
+                    gdpChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['2023', '2024 (Đáy)', '2025 (Phục hồi)', '2026 (Dự báo)'],
+                            datasets: [{
+                                label: 'Tăng trưởng GDP (%)',
+                                data: [1.5, 1.35, 2.3, 2.15], 
+                                borderColor: '#ff1493',
+                                backgroundColor: gradient,
+                                borderWidth: 4,
+                                pointBackgroundColor: '#fff',
+                                pointBorderColor: '#ff1493',
+                                pointBorderWidth: 3,
+                                pointRadius: 6,
+                                pointHoverRadius: 10,
+                                fill: true,
+                                tension: 0.4 
+                            }]
                         },
-                        plugins: {
-                            legend: { labels: { color: '#333', font: { family: 'Quicksand', size: 14, weight: 'bold' } } },
-                            tooltip: { backgroundColor: 'rgba(255, 20, 147, 0.9)', titleFont: { family: 'Quicksand', size: 14 }, bodyFont: { family: 'Quicksand', size: 14, weight: 'bold' }, padding: 12, displayColors: false }
-                        },
-                        scales: {
-                            x: { grid: { display: false }, ticks: { color: '#333', font: { family: 'Quicksand', weight: 'bold' } } },
-                            y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#333', font: { family: 'Quicksand', weight: 'bold' }, stepSize: 0.5 } }
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: {
+                                duration: 2500, // Vẽ từ từ trong 2.5 giây
+                                easing: 'easeOutQuart'
+                            },
+                            plugins: {
+                                legend: { labels: { color: '#333', font: { family: 'Quicksand', size: 14, weight: 'bold' } } },
+                                tooltip: { backgroundColor: 'rgba(255, 20, 147, 0.9)', titleFont: { family: 'Quicksand', size: 14 }, bodyFont: { family: 'Quicksand', size: 14, weight: 'bold' }, padding: 12, displayColors: false }
+                            },
+                            scales: {
+                                x: { grid: { display: false }, ticks: { color: '#333', font: { family: 'Quicksand', weight: 'bold' } } },
+                                y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#333', font: { family: 'Quicksand', weight: 'bold' }, stepSize: 0.5 } }
+                            }
                         }
-                    }
-                });
-                if(isDark) updateChartTheme();
+                    });
+                    if(isDark) updateChartTheme();
+                }, 800); // 800ms delay
             }
-        }, { threshold: 0.1 }); // Kích hoạt ngay khi 10% biểu đồ lọt vào màn hình
+        }, { threshold: 0.5 }); // Ngưỡng 0.5 tức là cuộn đúng giữa phần 5 mới bắt đầu kích hoạt
         
-        chartObserver.observe(document.getElementById('chart-trigger'));
+        chartObserver.observe(document.getElementById('chart-section'));
 
         function updateChartTheme() {
             if(!gdpChart) return;
