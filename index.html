@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tổng quan Kinh tế Australia | Design by TrangNee</title>
+    <title>Tổng quan Kinh tế Australia | Design by Huyền Trang</title>
     
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -34,9 +34,10 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Quicksand', sans-serif; cursor: none; }
-        body { background-color: var(--bg-color); color: var(--text-color); transition: all 0.5s ease; overflow-x: hidden; scroll-behavior: smooth; width: 100vw; }
+        body { background-color: var(--bg-color); color: var(--text-color); transition: all 0.5s ease; overflow-x: hidden; scroll-behavior: smooth; width: 100%; }
         ::selection { background-color: var(--primary-pink); color: white; }
 
+        /* Splash Screen */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s; }
         #splash-screen h1 { color: var(--primary-pink); margin-bottom: 20px; font-size: clamp(1.8rem, 4vw, 2.5rem); text-shadow: var(--neon-shadow); text-align: center; padding: 0 20px;}
         .start-btn { background: var(--primary-pink); color: white; font-size: 1.2rem; font-weight: bold; padding: 15px 40px; border: none; border-radius: 50px; box-shadow: 0 10px 20px rgba(255, 105, 180, 0.4); transition: 0.3s; animation: pulseBtn 2s infinite; cursor: pointer !important; }
@@ -72,11 +73,12 @@
         .timeline-item li strong { color: var(--primary-pink); }
         .timeline-item li:hover { transform: translateX(5px); }
 
-        /* Vạch kẻ đường tự động vẽ cho mỗi dòng (Mini Line Charts) */
-        .gdp-track { width: 100%; max-width: 350px; height: 6px; background: rgba(255, 105, 180, 0.15); border-radius: 3px; margin: 8px 0 15px 15px; position: relative; display: flex; align-items: center; border: 1px solid var(--glass-border); }
-        .gdp-line { height: 100%; background: linear-gradient(90deg, var(--primary-pink), var(--secondary-pink)); border-radius: 3px; width: 0; transition: width 2.5s cubic-bezier(0.25, 1, 0.5, 1); box-shadow: 0 0 10px var(--primary-pink); position: relative; }
-        .gdp-line::after { content: ''; position: absolute; right: 0; top: -3px; width: 12px; height: 12px; background: #fff; border: 2px solid var(--secondary-pink); border-radius: 50%; box-shadow: 0 0 8px var(--primary-pink); }
-        .gdp-val { position: absolute; right: -55px; font-weight: bold; color: var(--primary-pink); font-size: 0.95rem; }
+        /* ĐÃ FIX: Vạch kẻ đường (Mini Line) tự động vừa vặn Mobile */
+        .gdp-wrapper { display: flex; align-items: center; gap: 15px; margin: 10px 0 20px 10px; width: 100%; max-width: 350px; }
+        .gdp-track { flex-grow: 1; height: 8px; background: rgba(255, 105, 180, 0.15); border-radius: 4px; border: 1px solid var(--glass-border); position: relative; }
+        .gdp-line { height: 100%; background: linear-gradient(90deg, var(--primary-pink), var(--secondary-pink)); border-radius: 4px; width: 0; transition: width 2.5s cubic-bezier(0.25, 1, 0.5, 1); box-shadow: 0 0 10px var(--primary-pink); position: absolute; left: 0; top: 0; }
+        .gdp-line::after { content: ''; position: absolute; right: -6px; top: -3px; width: 12px; height: 12px; background: #fff; border: 2px solid var(--secondary-pink); border-radius: 50%; box-shadow: 0 0 8px var(--primary-pink); }
+        .gdp-val { font-weight: bold; color: var(--primary-pink); font-size: 1rem; min-width: 45px; }
 
         .highlight-box { background: rgba(255, 105, 180, 0.1); padding: 15px; border-left: 4px solid var(--primary-pink); border-radius: 5px; margin-top: 15px; transform: translateZ(25px); transition: 0.3s; }
         .highlight-box:hover { transform: scale(1.02) translateZ(30px); background: rgba(255, 105, 180, 0.2); }
@@ -108,7 +110,17 @@
         .tool-btn { background: var(--glass-bg); border: 1px solid var(--primary-pink); color: var(--primary-pink); width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; backdrop-filter: blur(5px); box-shadow: var(--card-shadow); transition: 0.3s; cursor: pointer !important; }
         .tool-btn:hover { transform: translateY(-5px) scale(1.1); background: var(--primary-pink); color: white; }
 
-        footer { text-align: center; padding: 50px 20px; margin-top: 20px; border-top: 1px solid var(--glass-border); font-size: 1.2rem; }
+        /* Lời chào trượt từ dưới lên ở cuối trang */
+        .closing-message { height: 40px; overflow: hidden; position: relative; margin: 20px auto 0 auto; text-align: center; width: 100%; }
+        .closing-text { font-size: 1.3rem; font-weight: bold; color: var(--primary-pink); text-shadow: var(--neon-shadow); position: absolute; width: 100%; animation: scrollUpText 4s linear infinite; }
+        @keyframes scrollUpText {
+            0% { transform: translateY(40px); opacity: 0; }
+            20% { transform: translateY(10px); opacity: 1; }
+            80% { transform: translateY(-10px); opacity: 1; }
+            100% { transform: translateY(-40px); opacity: 0; }
+        }
+
+        footer { text-align: center; padding: 20px 20px 50px 20px; border-top: 1px solid var(--glass-border); font-size: 1.2rem; }
         .design-by { color: var(--primary-pink); font-weight: bold; position: relative; padding: 10px 20px; display: inline-block; border: 2px dashed transparent; transition: 0.3s; border-radius: 30px; cursor: pointer !important;}
         .design-by:hover { text-shadow: var(--neon-shadow); transform: scale(1.1); background: rgba(255, 105, 180, 0.1); }
         
@@ -236,27 +248,39 @@
             
             <ul>
                 <li data-aos="fade-up" data-aos-delay="100"><strong>Giai đoạn 2023: Tăng trưởng chậm lại</strong>
-                    <div class="gdp-track"><div class="gdp-line" data-width="50%"></div><span class="gdp-val">1.5%</span></div>
+                    <div class="gdp-wrapper">
+                        <div class="gdp-track"><div class="gdp-line" data-width="50%"></div></div>
+                        <span class="gdp-val">1.5%</span>
+                    </div>
                     • Áp lực chính: Chi phí sinh hoạt tăng mạnh, lãi suất cao để kiềm chế lạm phát.
                     <br>• Hệ quả: Thu nhập thực tế giảm, tiêu dùng yếu.
                     <br><em style="color: var(--secondary-pink);">👉 Đặc điểm: “Hạ nhiệt sau giai đoạn phục hồi hậu COVID”.</em>
                 </li>
                 
                 <li data-aos="fade-up" data-aos-delay="200"><strong>Năm 2024: Giai đoạn khó khăn nhất</strong>
-                    <div class="gdp-track"><div class="gdp-line" data-width="43%"></div><span class="gdp-val">1.3%</span></div>
+                    <div class="gdp-wrapper">
+                        <div class="gdp-track"><div class="gdp-line" data-width="43%"></div></div>
+                        <span class="gdp-val">1.3%</span>
+                    </div>
                     • Nguyên nhân: Tiêu dùng hộ gia đình giảm sâu, thị trường nhà ở khủng hoảng giá. Thu nhập thực tế giảm mạnh.
                     <br><em style="color: var(--secondary-pink);">👉 Đặc điểm: “Khủng hoảng chi phí sinh hoạt”.</em>
                 </li>
 
                 <li data-aos="fade-up" data-aos-delay="300"><strong>Năm 2025: Bắt đầu phục hồi</strong>
-                    <div class="gdp-track"><div class="gdp-line" data-width="76%"></div><span class="gdp-val">~2.3%</span></div>
+                    <div class="gdp-wrapper">
+                        <div class="gdp-track"><div class="gdp-line" data-width="76%"></div></div>
+                        <span class="gdp-val">~2.3%</span>
+                    </div>
                     • Động lực: Đầu tư tư nhân tăng, xuất khẩu dịch vụ mạnh, chi tiêu chính phủ hỗ trợ.
                     <br>• Thách thức: Người dân vẫn thắt chặt chi tiêu, áp lực giá cả chưa dứt.
                     <br><em style="color: var(--secondary-pink);">👉 Đặc điểm: “Phục hồi nhưng chưa mạnh”.</em>
                 </li>
 
                 <li data-aos="fade-up" data-aos-delay="400"><strong>Năm 2026 (Dự báo): Ổn định dần</strong>
-                    <div class="gdp-track"><div class="gdp-line" data-width="71%"></div><span class="gdp-val">~2.1%</span></div>
+                    <div class="gdp-wrapper">
+                        <div class="gdp-track"><div class="gdp-line" data-width="71%"></div></div>
+                        <span class="gdp-val">~2.1%</span>
+                    </div>
                     • GDP dự kiến duy trì ở mức 2,1 – 2,2%. Thất nghiệp ổn định khoảng ~4–4,5%.
                     <br>• Rủi ro: Xung đột địa chính trị ảnh hưởng giá năng lượng, lãi suất cao kéo dài.
                     <br><em style="color: var(--secondary-pink);">👉 Đặc điểm: “Ổn định dần nhưng còn nhiều bất định”.</em>
@@ -314,8 +338,12 @@
         </div>
     </div>
 
+    <div class="closing-message">
+        <div class="closing-text">Cảm ơn đã xem. Hẹn gặp lại! ❤️</div>
+    </div>
+    
     <footer id="site-footer">
-        <span class="design-by" id="trangnee-btn">Design by Huyền Trang</span>
+        <span class="design-by" id="huyentrang-btn">Design by Huyền Trang</span>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -381,6 +409,10 @@
             document.getElementById('audio-icon').className = 'fas fa-pause';
             
             setTimeout(typeWriter, 500);
+
+            // Gọi hàm initAnimations để bắt đầu nghe các sự kiện cuộn (Fix lỗi phần 1 bị hiện sớm)
+            initAnimations();
+
             setTimeout(() => { startAutoScroll(); }, 3000);
         }
 
@@ -390,38 +422,44 @@
             isPlaying = !isPlaying;
         }
 
-        // --- 4. HIỆU ỨNG CHỮ TỰ GÕ VÀ VẠCH KẺ (MINI LINE) KHI CUỘN TỚI ---
-        const scrollObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                // Hiệu ứng chữ gõ
-                if(entry.target.classList.contains('type-title') && entry.isIntersecting && !entry.target.classList.contains('typed')) {
-                    entry.target.classList.add('typed');
-                    let text = entry.target.getAttribute('data-text');
-                    let k = 0;
-                    function typeH2() {
-                        if (k < text.length) {
-                            entry.target.innerHTML += text.charAt(k);
-                            k++; setTimeout(typeH2, 40); 
-                        }
-                    }
-                    typeH2();
-                }
-                
-                // Hiệu ứng vạch kẻ đường (Mini Line)
-                if(entry.target.classList.contains('gdp-line') && entry.isIntersecting) {
-                    let w = entry.target.getAttribute('data-width');
-                    entry.target.style.width = w;
-                }
-            });
-        }, { threshold: 0.8 }); 
+        // Xóa chữ mặc định để chuẩn bị gõ
+        document.querySelectorAll('.type-title').forEach(el => { el.innerHTML = ''; });
 
-        document.querySelectorAll('.type-title').forEach(el => {
-            el.innerHTML = ''; scrollObserver.observe(el);
-        });
-        document.querySelectorAll('.gdp-line').forEach(el => scrollObserver.observe(el));
+        // --- 4. KHỞI TẠO HIỆU ỨNG (SAU KHI BẤM START) ---
+        function initAnimations() {
+            // AOS Init
+            AOS.init({ duration: 800, offset: 50 });
+
+            // Intersection Observer cho Hiệu ứng Gõ Chữ & Vẽ Vạch
+            const scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // Hiệu ứng chữ gõ
+                    if(entry.target.classList.contains('type-title') && entry.isIntersecting && !entry.target.classList.contains('typed')) {
+                        entry.target.classList.add('typed');
+                        let text = entry.target.getAttribute('data-text');
+                        let k = 0;
+                        function typeH2() {
+                            if (k < text.length) {
+                                entry.target.innerHTML += text.charAt(k);
+                                k++; setTimeout(typeH2, 40); 
+                            }
+                        }
+                        typeH2();
+                    }
+                    
+                    // Hiệu ứng vạch kẻ đường (Mini Line)
+                    if(entry.target.classList.contains('gdp-line') && entry.isIntersecting) {
+                        let w = entry.target.getAttribute('data-width');
+                        entry.target.style.width = w;
+                    }
+                });
+            }, { threshold: 0.8 }); 
+
+            document.querySelectorAll('.type-title').forEach(el => { scrollObserver.observe(el); });
+            document.querySelectorAll('.gdp-line').forEach(el => scrollObserver.observe(el));
+        }
 
         // --- 5. GIAO DIỆN CHUNG ---
-        AOS.init({ duration: 800, offset: 50 });
         if(window.innerWidth > 768) {
             VanillaTilt.init(document.querySelectorAll(".tilt-card"), { max: 3, speed: 400, glare: true, "max-glare": 0.1 });
         }
@@ -450,7 +488,7 @@
             });
         }
 
-        const greetingText = "Chào mừng đến với báo cáo của Trang!";
+        const greetingText = "Chào mừng đến với báo cáo kinh tế của Huyền Trang!";
         let i = 0;
         function typeWriter() {
             if (i < greetingText.length) {
@@ -459,8 +497,9 @@
             }
         }
 
+        // --- PHÁO GIẤY ---
         function fireConfetti() { confetti({ particleCount: 200, spread: 100, origin: { y: 0.8 }, colors: ['#ff69b4', '#ff1493', '#ffffff', '#ffd700'] }); }
-        document.getElementById('trangnee-btn').addEventListener('click', fireConfetti);
+        document.getElementById('huyentrang-btn').addEventListener('click', fireConfetti);
 
         let autoConfettiFired = false;
         const footerObserver = new IntersectionObserver((entries) => {
@@ -487,7 +526,7 @@
             }
         });
 
-        // --- 6. BIỂU ĐỒ LỚN (TRÒN & ĐƯỜNG) ---
+        // --- 6. BIỂU ĐỒ LỚN ---
         let structureChart, gdpChart;
         let pieRendered = false;
         let lineRendered = false;
