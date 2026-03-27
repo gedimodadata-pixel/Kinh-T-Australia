@@ -33,6 +33,7 @@
             --neon-shadow: 0 0 10px #ff1493, 0 0 20px #ff1493;
         }
 
+        /* ĐÃ FIX: Khóa tràn viền ngang 100% */
         html, body { margin: 0; padding: 0; width: 100%; overflow-x: hidden; font-family: 'Quicksand', sans-serif; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.5s, color 0.5s; scroll-behavior: smooth; cursor: none; }
         * { box-sizing: border-box; }
         ::selection { background-color: var(--primary-pink); color: white; }
@@ -59,15 +60,16 @@
         .mini-marquee-content { display: inline-block; animation: marquee 15s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        /* Gắn scroll-margin-top để khi cuộn tới không bị Navbar đè */
-        .hero { min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; scroll-margin-top: 80px; }
+        /* TÁCH BIỆT: Hero section luôn hiện trước */
+        .hero { min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
         .typing-text { font-size: clamp(1.6rem, 4vw, 3rem); font-weight: bold; color: var(--primary-pink); text-shadow: var(--neon-shadow); margin-bottom: 15px; min-height: 80px;}
 
+        /* Báo cáo ẩn đi ban đầu */
         #report-content { opacity: 0; transform: translateY(40px); transition: opacity 1.5s ease, transform 1.5s ease; display: none; }
         #report-content.show { opacity: 1; transform: translateY(0); display: block; }
 
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; width: 100%; }
-        .timeline-item { background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 40px; margin-bottom: 50px; box-shadow: var(--card-shadow); transform-style: preserve-3d; width: 100%; scroll-margin-top: 90px;}
+        .timeline-item { background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 40px; margin-bottom: 50px; box-shadow: var(--card-shadow); transform-style: preserve-3d; width: 100%;}
         
         .timeline-item h2.type-title { color: var(--primary-pink); margin-bottom: 20px; font-size: clamp(1.3rem, 3vw, 1.8rem); transform: translateZ(30px); border-bottom: 2px dashed var(--primary-pink); padding-bottom: 5px; min-height: 35px;}
         .timeline-item h3 { color: var(--secondary-pink); margin: 20px 0 10px 0; font-size: 1.2rem; transform: translateZ(25px); }
@@ -75,6 +77,7 @@
         .timeline-item li { transition: 0.3s ease; margin-bottom: 15px; list-style-position: inside;}
         .timeline-item li strong { color: var(--primary-pink); }
 
+        /* ĐÃ FIX LỖI TRÀN VIỀN: Vạch kẻ đường (Mini Line) tự ôm gọn */
         .gdp-wrapper { display: flex; align-items: center; gap: 10px; margin: 10px 0 20px 0; width: 100%; max-width: 400px; }
         .gdp-track { flex-grow: 1; height: 8px; background: rgba(255, 105, 180, 0.15); border-radius: 4px; border: 1px solid var(--glass-border); position: relative; }
         .gdp-line { height: 100%; background: linear-gradient(90deg, var(--primary-pink), var(--secondary-pink)); border-radius: 4px; width: 0; transition: width 2.5s cubic-bezier(0.25, 1, 0.5, 1); box-shadow: 0 0 10px var(--primary-pink); position: absolute; left: 0; top: 0; }
@@ -102,17 +105,24 @@
         .tool-btn { background: var(--glass-bg); border: 1px solid var(--primary-pink); color: var(--primary-pink); width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; backdrop-filter: blur(5px); box-shadow: var(--card-shadow); transition: 0.3s; cursor: pointer !important; }
         .tool-btn:hover { transform: translateY(-5px) scale(1.1); background: var(--primary-pink); color: white; }
 
+        /* Lời chào trượt từ dưới lên */
         .closing-message { height: 50px; overflow: hidden; position: relative; margin: 0 auto; text-align: center; width: 100%; }
         .closing-text { font-size: 1.2rem; font-weight: bold; color: var(--primary-pink); position: absolute; width: 100%; animation: scrollUpText 4s linear infinite; }
-        @keyframes scrollUpText { 0% { transform: translateY(50px); opacity: 0; } 20% { transform: translateY(10px); opacity: 1; } 80% { transform: translateY(-10px); opacity: 1; } 100% { transform: translateY(-50px); opacity: 0; } }
+        @keyframes scrollUpText {
+            0% { transform: translateY(50px); opacity: 0; }
+            20% { transform: translateY(10px); opacity: 1; }
+            80% { transform: translateY(-10px); opacity: 1; }
+            100% { transform: translateY(-50px); opacity: 0; }
+        }
 
-        footer { text-align: center; padding: 10px 20px 40px 20px; border-top: 1px solid var(--glass-border); font-size: 1.2rem; scroll-margin-top: 80px;}
+        footer { text-align: center; padding: 10px 20px 40px 20px; border-top: 1px solid var(--glass-border); font-size: 1.2rem; }
         .design-by { color: var(--primary-pink); font-weight: bold; position: relative; padding: 10px 20px; display: inline-block; border: 2px dashed transparent; transition: 0.3s; border-radius: 30px; cursor: pointer !important;}
         .design-by:hover { text-shadow: var(--neon-shadow); transform: scale(1.1); background: rgba(255, 105, 180, 0.1); }
         
         .pink-flash { animation: neonFlash 0.5s 4 alternate; }
         @keyframes neonFlash { from { background-color: var(--bg-color); } to { background-color: #ff1493; } }
 
+        /* Tối ưu Mobile */
         @media (max-width: 768px) {
             .cursor, .cursor-trail { display: none; }
             * { cursor: auto !important; }
@@ -151,9 +161,9 @@
         </div>
     </div>
 
-    <section class="hero" id="hero-section">
+    <section class="hero">
         <div class="typing-text" id="greeting"></div>
-        <p>Báo cáo Toàn cảnh & Dự báo Diễn biến Kinh tế 2023 - 2026</p>
+        <p>Báo cáo Toàn cảnh & Dự báo Diễn biến Kinh tế Australia 2023 - 2026</p>
     </section>
 
     <div class="social-sticky">
@@ -164,8 +174,8 @@
 
     <div class="tools-bottom">
         <div class="tool-btn" onclick="toggleAudio()" title="Bật/Tắt Nhạc"><i class="fas fa-music" id="audio-icon"></i></div>
-        <div class="tool-btn" onclick="togglePresentation()" title="Bật/Tắt Thuyết trình Tự động"><i class="fas fa-pause" id="scroll-icon"></i></div>
-        <div class="tool-btn" onclick="toggleVoiceOnly()" title="Tắt/Bật giọng đọc"><i class="fas fa-microphone" id="voice-icon"></i></div>
+        <div class="tool-btn" onclick="toggleScrollAction()" title="Phát/Tạm dừng Chạy trang"><i class="fas fa-pause" id="scroll-icon"></i></div>
+        <div class="tool-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Lên đầu trang"><i class="fas fa-arrow-up"></i></div>
     </div>
     
     <audio id="lofi-audio" loop src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=upbeat-pop-daylight-112028.mp3"></audio>
@@ -173,37 +183,40 @@
     <div id="report-content">
         <div class="container">
             
-            <div class="timeline-item tilt-card" id="sec-1">
+            <div class="timeline-item tilt-card" data-aos="fade-up">
                 <h2 class="type-title" data-text="🌏 1. Đặc điểm & Điều kiện Phát triển"></h2>
-                <h3>Điều kiện tự nhiên & Vị thế:</h3>
+                
+                <h3 data-aos="fade-right">Điều kiện tự nhiên & Vị thế:</h3>
                 <ul>
-                    <li><strong>Tài nguyên thiên nhiên:</strong> Phong phú (than đá, sắt, khí đốt).</li>
-                    <li><strong>Vị trí địa lý:</strong> Gần khu vực châu Á – Thái Bình Dương, cực kỳ thuận lợi cho thương mại.</li>
-                    <li><strong>Nguồn lực con người:</strong> Dân số ít nhưng trình độ học vấn cao, lao động chất lượng.</li>
-                    <li><strong>Thể chế:</strong> Nền kinh tế thị trường phát triển với các chính sách ổn định.</li>
-                    <li><strong>Quy mô GDP:</strong> Thuộc nhóm top 15–20 thế giới (Năm 2023 đạt khoảng 1,7 nghìn tỷ USD).</li>
+                    <li data-aos="fade-right" data-aos-delay="100"><strong>Tài nguyên thiên nhiên:</strong> Phong phú (than đá, sắt, khí đốt).</li>
+                    <li data-aos="fade-right" data-aos-delay="200"><strong>Vị trí địa lý:</strong> Gần khu vực châu Á – Thái Bình Dương, cực kỳ thuận lợi cho thương mại.</li>
+                    <li data-aos="fade-right" data-aos-delay="300"><strong>Nguồn lực con người:</strong> Dân số ít nhưng trình độ học vấn cao, lao động chất lượng.</li>
+                    <li data-aos="fade-right" data-aos-delay="400"><strong>Thể chế:</strong> Nền kinh tế thị trường phát triển với các chính sách ổn định.</li>
+                    <li data-aos="fade-right" data-aos-delay="500"><strong>Quy mô GDP:</strong> Thuộc nhóm top 15–20 thế giới (Năm 2023 đạt khoảng 1,7 nghìn tỷ USD).</li>
                 </ul>
-                <div class="highlight-box">
+                <div class="highlight-box" data-aos="zoom-in" data-aos-delay="600">
                     <p style="margin: 0;"><strong>👉 Nhận xét:</strong> Quy mô lớn, phát triển cao và ổn định.</p>
                 </div>
+                
                 <div class="image-grid">
-                    <div class="img-container"><img class="content-image delay-1" src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=600&q=80" alt="Tài nguyên"></div>
-                    <div class="img-container"><img class="content-image delay-2" src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=600&q=80" alt="Vị trí"></div>
-                    <div class="img-container"><img class="content-image delay-3" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80" alt="Nhân lực"></div>
+                    <div class="img-container" data-aos="zoom-in" data-aos-delay="700"><img class="content-image delay-1" src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=600&q=80" alt="Tài nguyên"></div>
+                    <div class="img-container" data-aos="zoom-in" data-aos-delay="800"><img class="content-image delay-2" src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=600&q=80" alt="Vị trí"></div>
+                    <div class="img-container" data-aos="zoom-in" data-aos-delay="900"><img class="content-image delay-3" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80" alt="Nhân lực"></div>
                 </div>
             </div>
 
-            <div class="timeline-item tilt-card" id="sec-2">
+            <div class="timeline-item tilt-card" data-aos="fade-up">
                 <h2 class="type-title" data-text="⚙️ 2. Chuyển dịch Cơ cấu & Phân bố"></h2>
+                
                 <div class="charts-grid">
                     <div>
-                        <h3>Cơ cấu kinh tế (CCKT):</h3>
+                        <h3 data-aos="fade-right">Cơ cấu kinh tế (CCKT):</h3>
                         <ul>
-                            <li><strong>Dịch vụ:</strong> Chiếm ~70% (giáo dục, du lịch, tài chính).</li>
-                            <li><strong>Công nghiệp:</strong> Chiếm ~25%.</li>
-                            <li><strong>Nông nghiệp:</strong> Chiếm <5%.</li>
+                            <li data-aos="fade-right" data-aos-delay="100"><strong>Dịch vụ:</strong> Chiếm ~70% (giáo dục, du lịch, tài chính).</li>
+                            <li data-aos="fade-right" data-aos-delay="200"><strong>Công nghiệp:</strong> Chiếm ~25%.</li>
+                            <li data-aos="fade-right" data-aos-delay="300"><strong>Nông nghiệp:</strong> Chiếm <5%.</li>
                         </ul>
-                        <div class="highlight-box">
+                        <div class="highlight-box" data-aos="zoom-in" data-aos-delay="400">
                             <p style="margin: 0;"><strong>👉 Xu hướng:</strong> Tiếp tục tăng tỷ trọng dịch vụ, giảm dần vai trò nông nghiệp.</p>
                         </div>
                     </div>
@@ -212,67 +225,89 @@
                         <div class="chart-container"><canvas id="structureChart"></canvas></div>
                     </div>
                 </div>
-                <h3 style="margin-top: 30px;">Phân bố kinh tế:</h3>
+
+                <h3 style="margin-top: 30px;" data-aos="fade-right">Phân bố kinh tế:</h3>
                 <ul>
-                    <li>Tập trung chủ yếu ở các thành phố ven biển: <strong>Sydney, Melbourne, Brisbane</strong>.</li>
-                    <li>Khai khoáng tập trung mạnh tại khu vực <strong>Tây Australia</strong>.</li>
-                    <li>Khu vực nội địa (hoang mạc) ít phát triển.</li>
+                    <li data-aos="fade-right" data-aos-delay="100">Tập trung chủ yếu ở các thành phố ven biển: <strong>Sydney, Melbourne, Brisbane</strong>.</li>
+                    <li data-aos="fade-right" data-aos-delay="200">Khai khoáng tập trung mạnh tại khu vực <strong>Tây Australia</strong>.</li>
+                    <li data-aos="fade-right" data-aos-delay="300">Khu vực nội địa (hoang mạc) ít phát triển.</li>
                 </ul>
-                <div class="highlight-box">
+                <div class="highlight-box" data-aos="zoom-in" data-aos-delay="400">
                     <p style="margin: 0;"><strong>👉 Nhận xét:</strong> Phân bố không đồng đều.</p>
                 </div>
-                <div class="mini-marquee">
+                
+                <div class="mini-marquee" data-aos="fade-up">
                     <div class="mini-marquee-content">✦ Sydney ✦ Melbourne ✦ Brisbane ✦ Western Australia ✦ Outback ✦</div>
                 </div>
             </div>
 
-            <div class="timeline-item tilt-card" id="sec-3">
+            <div class="timeline-item tilt-card" data-aos="fade-up">
                 <h2 class="type-title" data-text="📈 3. Diễn biến Kinh tế (2023–2026)"></h2>
+                
                 <ul>
-                    <li><strong>Giai đoạn 2023: Tăng trưởng chậm lại</strong>
-                        <div class="gdp-wrapper"><div class="gdp-track"><div class="gdp-line" data-width="50%"></div></div><span class="gdp-val">1.5%</span></div>
+                    <li data-aos="fade-up" data-aos-delay="100"><strong>Giai đoạn 2023: Tăng trưởng chậm lại</strong>
+                        <div class="gdp-wrapper">
+                            <div class="gdp-track"><div class="gdp-line" data-width="50%"></div></div>
+                            <span class="gdp-val">1.5%</span>
+                        </div>
                         • Áp lực chính: Chi phí sinh hoạt tăng mạnh, lãi suất cao.
                         <br>• Hệ quả: Thu nhập thực tế giảm, tiêu dùng yếu.
                         <br><em style="color: var(--secondary-pink);">👉 Đặc điểm: “Hạ nhiệt sau phục hồi”.</em>
                     </li>
-                    <li><strong>Năm 2024: Giai đoạn khó khăn nhất</strong>
-                        <div class="gdp-wrapper"><div class="gdp-track"><div class="gdp-line" data-width="43%"></div></div><span class="gdp-val">1.3%</span></div>
+                    
+                    <li data-aos="fade-up" data-aos-delay="200"><strong>Năm 2024: Giai đoạn khó khăn nhất</strong>
+                        <div class="gdp-wrapper">
+                            <div class="gdp-track"><div class="gdp-line" data-width="43%"></div></div>
+                            <span class="gdp-val">1.3%</span>
+                        </div>
                         • Nguyên nhân: Tiêu dùng giảm sâu, thị trường nhà ở khủng hoảng giá.
                         <br><em style="color: var(--secondary-pink);">👉 Đặc điểm: “Khủng hoảng chi phí sinh hoạt”.</em>
                     </li>
-                    <li><strong>Năm 2025: Bắt đầu phục hồi</strong>
-                        <div class="gdp-wrapper"><div class="gdp-track"><div class="gdp-line" data-width="76%"></div></div><span class="gdp-val">~2.3%</span></div>
+
+                    <li data-aos="fade-up" data-aos-delay="300"><strong>Năm 2025: Bắt đầu phục hồi</strong>
+                        <div class="gdp-wrapper">
+                            <div class="gdp-track"><div class="gdp-line" data-width="76%"></div></div>
+                            <span class="gdp-val">~2.3%</span>
+                        </div>
                         • Động lực: Đầu tư tư nhân tăng, xuất khẩu dịch vụ mạnh.
                         <br><em style="color: var(--secondary-pink);">👉 Đặc điểm: “Phục hồi nhưng chưa mạnh”.</em>
                     </li>
-                    <li><strong>Năm 2026 (Dự báo): Ổn định dần</strong>
-                        <div class="gdp-wrapper"><div class="gdp-track"><div class="gdp-line" data-width="71%"></div></div><span class="gdp-val">~2.1%</span></div>
+
+                    <li data-aos="fade-up" data-aos-delay="400"><strong>Năm 2026 (Dự báo): Ổn định dần</strong>
+                        <div class="gdp-wrapper">
+                            <div class="gdp-track"><div class="gdp-line" data-width="71%"></div></div>
+                            <span class="gdp-val">~2.1%</span>
+                        </div>
                         • GDP duy trì ở mức 2,1 – 2,2%. Thất nghiệp ổn định.
                         <br>• Rủi ro: Xung đột địa chính trị, lãi suất cao.
                         <br><em style="color: var(--secondary-pink);">👉 Đặc điểm: “Ổn định dần nhưng còn bất định”.</em>
                     </li>
                 </ul>
+
                 <div class="chart-wrapper" id="chart-line-trigger" style="margin-top: 30px;">
                     <h4 style="text-align: center; color: var(--primary-pink); margin-bottom: 10px;">Tốc độ Tăng trưởng GDP (2023 - 2026)</h4>
                     <div class="chart-container"><canvas id="gdpChart"></canvas></div>
                 </div>
+
                 <div class="image-grid">
-                    <div class="img-container"><img class="content-image delay-2" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80" alt="Nhà ở"></div>
-                    <div class="img-container"><img class="content-image delay-3" src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80" alt="Lạm phát"></div>
-                    <div class="img-container"><img class="content-image delay-1" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80" alt="Phục hồi"></div>
+                    <div class="img-container" data-aos="fade-up" data-aos-delay="500"><img class="content-image delay-2" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80" alt="Nhà ở"></div>
+                    <div class="img-container" data-aos="fade-up" data-aos-delay="600"><img class="content-image delay-3" src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80" alt="Lạm phát"></div>
+                    <div class="img-container" data-aos="fade-up" data-aos-delay="700"><img class="content-image delay-1" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80" alt="Phục hồi"></div>
                 </div>
             </div>
 
-            <div class="timeline-item tilt-card" id="sec-4">
+            <div class="timeline-item tilt-card" data-aos="fade-up">
                 <h2 class="type-title" data-text="✅ 4. Tổng kết Xu hướng & Đánh giá"></h2>
+                
                 <div class="mini-marquee" style="background: transparent; border: none; font-size: 1.3rem;">
                     <div class="mini-marquee-content" style="color: var(--text-color);">
                         Khó khăn (2023-2024) ➡️ Phục hồi (2025) ➡️ Ổn định (2026) ➡️ 
                         Khó khăn (2023-2024) ➡️ Phục hồi (2025) ➡️ Ổn định (2026) ➡️
                     </div>
                 </div>
+
                 <div class="charts-grid" style="margin-top: 20px;">
-                    <div>
+                    <div data-aos="fade-right">
                         <h3>🌟 Thế mạnh cốt lõi:</h3>
                         <ul>
                             <li>Kinh tế phát triển bền vững.</li>
@@ -280,7 +315,7 @@
                             <li>Chính sách điều hành linh hoạt.</li>
                         </ul>
                     </div>
-                    <div>
+                    <div data-aos="fade-left">
                         <h3>⚠️ Thách thức tồn đọng:</h3>
                         <ul>
                             <li>Lạm phát và chi phí sinh hoạt cao.</li>
@@ -289,19 +324,20 @@
                         </ul>
                     </div>
                 </div>
+                
                 <hr style="border-color: var(--glass-border); margin: 30px 0;">
-                <div class="highlight-box" style="background: rgba(255, 20, 147, 0.15); border-left-color: var(--secondary-pink);">
+                <div class="highlight-box" style="background: rgba(255, 20, 147, 0.15); border-left-color: var(--secondary-pink);" data-aos="zoom-in">
                     <h3 style="color: var(--secondary-pink); margin-top: 0;">🎯 KẾT LUẬN:</h3>
                     <p style="margin: 0; font-size: 1.15rem; font-weight: 600;">Australia là nền kinh tế phát triển quy mô lớn, hiện đang hướng tới mục tiêu “hạ cánh mềm” (tăng trưởng ổn định, lạm phát giảm). Tuy nhiên, nền kinh tế vẫn cần thận trọng trước các rủi ro biến động quốc tế.</p>
                 </div>
             </div>
         </div>
 
-        <div class="closing-message" id="site-footer">
+        <div class="closing-message">
             <div class="closing-text">Cảm ơn đã xem. Hẹn gặp lại! ❤️</div>
         </div>
         
-        <footer>
+        <footer id="site-footer">
             <span class="design-by" id="huyentrang-btn">Design by Huyền Trang</span>
         </footer>
     </div>
@@ -311,145 +347,76 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
-        // --- 1. NHẠC & GIỌNG ĐỌC (TTS) ---
+        // --- 1. NHẠC TỰ TẮT KHI ĐỔI TAB / KHÓA MÀN HÌNH ---
         const audio = document.getElementById('lofi-audio');
-        let synth = window.speechSynthesis;
-        let isVoiceEnabled = true;
+        audio.volume = 0.5; 
         let isPlaying = false;
 
         document.addEventListener("visibilitychange", function() {
             if (document.hidden) {
-                if (isPlaying) audio.pause();
-                synth.cancel();
+                if (isPlaying) { audio.pause(); }
             } else {
-                if (isPlaying) audio.play().catch(e => {});
+                if (isPlaying) { audio.play().catch(e => {}); }
             }
         });
 
-        // Hàm tìm giọng tiếng Việt cứng
-        function getVietnameseVoice() {
-            let voices = synth.getVoices();
-            // Ưu tiên tìm giọng có chứa "vi", "HoaiMy", "Linh", "Google Tiếng Việt"
-            let viVoice = voices.find(v => v.lang.replace('_', '-').toLowerCase().includes('vi-vn')) ||
-                          voices.find(v => v.lang.toLowerCase().includes('vi')) ||
-                          voices.find(v => v.name.includes('HoaiMy') || v.name.includes('Google Tiếng Việt'));
-            return viVoice;
-        }
+        // --- 2. HỆ THỐNG AUTO SCROLL (NÚT DỪNG/CHẠY) ---
+        let autoScrollInterval;
+        let isAutoScrolling = false;
 
-        // Đảm bảo load giọng
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = getVietnameseVoice;
-        }
-
-        function speakText(text, callback) {
-            if(!isVoiceEnabled) { if(callback) callback(); return; }
-            synth.cancel();
+        function startAutoScroll() {
+            if (isAutoScrolling) return;
+            isAutoScrolling = true;
+            document.getElementById('scroll-icon').className = 'fas fa-pause'; 
             
-            let utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'vi-VN'; // ÉP TRÌNH DUYỆT PHẢI LẤY NGÔN NGỮ TIẾNG VIỆT
-            utterance.rate = 1.05;
-            utterance.pitch = 1.1;
-
-            let voice = getVietnameseVoice();
-            if (voice) { utterance.voice = voice; }
-
-            utterance.onstart = () => { audio.volume = 0.15; }; // Nhạc nhỏ đi khi đọc
-            utterance.onend = () => { audio.volume = 0.5; if(callback) callback(); };
-            utterance.onerror = () => { audio.volume = 0.5; if(callback) callback(); }; // Nếu lỗi, bỏ qua đọc tiếp
-
-            synth.speak(utterance);
+            autoScrollInterval = setInterval(() => {
+                window.scrollBy(0, 1.2);
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 5) {
+                    stopAutoScroll();
+                }
+            }, 25);
         }
 
-        // --- 2. KỊCH BẢN THUYẾT TRÌNH (Scroll + Voice Sync) ---
-        const script = [
-            { id: 'hero-section', text: "Chào mừng bạn đến với báo cáo kinh tế của Huyền Trang. Sau đây là Tổng quan và Diễn biến kinh tế ốc-xtrây-li-a từ 20 23 đến 20 26." },
-            { id: 'sec-1', text: "Phần 1. Đặc điểm và Điều kiện phát triển. Ốc-xtrây-li-a có tài nguyên phong phú, nguồn nhân lực chất lượng và quy mô GDP thuộc top đầu thế giới." },
-            { id: 'sec-2', text: "Phần 2. Cơ cấu và Phân bố kinh tế. Ngành dịch vụ chiếm tỷ trọng áp đảo lên tới 70 phần trăm. Kinh tế tập trung chủ yếu ở các thành phố ven biển như Xít-ni, Men-bơn." },
-            { id: 'sec-3', text: "Phần 3. Diễn biến kinh tế. Giai đoạn 20 23 đến 20 24 kinh tế gặp nhiều khó khăn, lạm phát cao. Tuy nhiên từ 20 25 đến 20 26, nền kinh tế bắt đầu phục hồi và dần ổn định." },
-            { id: 'sec-4', text: "Phần 4. Tổng kết. Nhìn chung, kinh tế Ốc-xtrây-li-a đang hướng tới hạ cánh mềm, tuy vẫn còn một số thách thức về chi phí sinh hoạt." },
-            { id: 'site-footer', text: "Cảm ơn bạn đã lắng nghe báo cáo." }
-        ];
-
-        let currentScene = 0;
-        let isPresentationActive = false;
-
-        function playNextScene() {
-            if(!isPresentationActive || currentScene >= script.length) {
-                stopPresentation();
-                return;
-            }
-            let scene = script[currentScene];
-            let el = document.getElementById(scene.id);
-            if(el) {
-                // Cuộn tới giữa màn hình
-                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-            
-            // Đợi trang cuộn xong (1s) rồi mới đọc
-            setTimeout(() => {
-                if(!isPresentationActive) return;
-                speakText(scene.text, () => {
-                    currentScene++;
-                    setTimeout(playNextScene, 1000); // Nghỉ 1s trước khi sang phần tiếp theo
-                });
-            }, 1000);
-        }
-
-        function stopPresentation() {
-            isPresentationActive = false;
-            synth.cancel();
-            audio.volume = 0.5;
-            document.getElementById('scroll-icon').className = 'fas fa-play';
-        }
-
-        function togglePresentation() {
-            if(isPresentationActive) {
-                stopPresentation();
-            } else {
-                isPresentationActive = true;
-                document.getElementById('scroll-icon').className = 'fas fa-pause';
-                if(currentScene >= script.length) currentScene = 0;
-                playNextScene();
+        function stopAutoScroll() {
+            if(isAutoScrolling) {
+                isAutoScrolling = false;
+                clearInterval(autoScrollInterval);
+                document.getElementById('scroll-icon').className = 'fas fa-play'; 
             }
         }
 
-        function toggleVoiceOnly() {
-            isVoiceEnabled = !isVoiceEnabled;
-            document.getElementById('voice-icon').className = isVoiceEnabled ? 'fas fa-microphone' : 'fas fa-microphone-slash';
-            if(!isVoiceEnabled) synth.cancel();
+        function toggleScrollAction() {
+            if(isAutoScrolling) { stopAutoScroll(); } else { startAutoScroll(); }
         }
 
-        // Tạm dừng khi người dùng chủ động kéo chuột
-        window.addEventListener('wheel', stopPresentation, {passive: true});
-        window.addEventListener('touchstart', stopPresentation, {passive: true});
+        // Tạm dừng khi người dùng chủ động kéo chuột / lướt
+        window.addEventListener('wheel', stopAutoScroll, {passive: true});
+        window.addEventListener('touchstart', stopAutoScroll, {passive: true});
+        window.addEventListener('keydown', stopAutoScroll, {passive: true});
 
-        // --- 3. BẮT ĐẦU TRẢI NGHIỆM ---
+        // --- 3. BẮT ĐẦU TRẢI NGHIỆM TỪ MÀN HÌNH CHÀO ---
         function startExperience() {
             const splash = document.getElementById('splash-screen');
             splash.style.opacity = '0';
             setTimeout(() => { splash.style.display = 'none'; }, 800);
             
-            audio.volume = 0.5;
             audio.play().catch(() => {});
             isPlaying = true;
             document.getElementById('audio-icon').className = 'fas fa-pause';
             
+            // Hiện intro gõ chữ
             setTimeout(typeWriter, 500);
 
-            // Chờ gõ xong intro -> Hiện Nội dung báo cáo -> Bật Thuyết trình
+            // Chờ gõ xong (khoảng 3.5s) -> Hiện Nội dung báo cáo -> Bật Observer -> AutoScroll
             setTimeout(() => {
                 const report = document.getElementById('report-content');
                 report.style.display = 'block';
-                void report.offsetWidth; // Force reflow
+                // Force reflow để transition mượt
+                void report.offsetWidth;
                 report.classList.add('show');
                 
                 initReportAnimations();
-                
-                // Bắt đầu chuỗi kịch bản cuộn + đọc
-                isPresentationActive = true;
-                document.getElementById('scroll-icon').className = 'fas fa-pause';
-                playNextScene();
-                
+                setTimeout(startAutoScroll, 1000);
             }, 4000);
         }
 
@@ -459,10 +426,13 @@
             isPlaying = !isPlaying;
         }
 
-        // --- 4. KHỞI TẠO HIỆU ỨNG GIAO DIỆN ---
+        // --- 4. KHỞI TẠO HIỆU ỨNG (CHỈ CHẠY KHI NỘI DUNG ĐÃ HIỆN) ---
+        // Xóa sạch chữ ở h2 để làm hiệu ứng gõ
         document.querySelectorAll('.type-title').forEach(el => { el.innerHTML = ''; });
 
         function initReportAnimations() {
+            AOS.init({ duration: 800, offset: 50 });
+
             const scrollObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     // Chữ tự gõ
@@ -471,10 +441,14 @@
                         let text = entry.target.getAttribute('data-text');
                         let k = 0;
                         function typeH2() {
-                            if (k < text.length) { entry.target.innerHTML += text.charAt(k); k++; setTimeout(typeH2, 40); }
+                            if (k < text.length) {
+                                entry.target.innerHTML += text.charAt(k);
+                                k++; setTimeout(typeH2, 40); 
+                            }
                         }
                         typeH2();
                     }
+                    
                     // Vạch kẻ (Mini Line)
                     if(entry.target.classList.contains('gdp-line') && entry.isIntersecting) {
                         entry.target.style.width = entry.target.getAttribute('data-width');
@@ -485,11 +459,12 @@
             document.querySelectorAll('.type-title').forEach(el => scrollObserver.observe(el));
             document.querySelectorAll('.gdp-line').forEach(el => scrollObserver.observe(el));
 
+            // Bật Observer cho Biểu đồ lớn
             chartObserver.observe(document.getElementById('chart-pie-trigger'));
             chartObserver.observe(document.getElementById('chart-line-trigger'));
         }
 
-        // --- 5. GIAO DIỆN CHUNG & THEME ---
+        // --- 5. GIAO DIỆN CHUNG ---
         if(window.innerWidth > 768) {
             VanillaTilt.init(document.querySelectorAll(".tilt-card"), { max: 3, speed: 400, glare: true, "max-glare": 0.1 });
         }
@@ -518,7 +493,7 @@
             });
         }
 
-        const greetingText = "Chào mừng đến với báo cáo kinh tế của Huyền Trang!";
+        const greetingText = "Chào mừng đến với báo cáo của Trang!";
         let i = 0;
         function typeWriter() {
             if (i < greetingText.length) {
@@ -549,13 +524,20 @@
         window.addEventListener('keydown', (e) => {
             typedStr += e.key.toLowerCase();
             if(typedStr.length > 4) typedStr = typedStr.slice(-4);
-            if(typedStr === "pink") { document.body.classList.add('pink-flash'); setTimeout(() => document.body.classList.remove('pink-flash'), 2000); typedStr = ""; }
+            if(typedStr === "pink") {
+                document.body.classList.add('pink-flash');
+                setTimeout(() => document.body.classList.remove('pink-flash'), 2000);
+                typedStr = ""; 
+            }
         });
 
-        // --- 6. BIỂU ĐỒ ---
+        // --- 6. BIỂU ĐỒ LỚN (OBSERVER ĐƯỢC KÍCH HOẠT SAU) ---
         let structureChart, gdpChart;
-        let pieRendered = false; let lineRendered = false;
-        Chart.defaults.font.family = 'Quicksand'; Chart.defaults.color = '#333';
+        let pieRendered = false;
+        let lineRendered = false;
+
+        Chart.defaults.font.family = 'Quicksand';
+        Chart.defaults.color = '#333';
 
         const chartObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -566,7 +548,10 @@
                         const ctxPie = document.getElementById('structureChart').getContext('2d');
                         structureChart = new Chart(ctxPie, {
                             type: 'doughnut',
-                            data: { labels: ['Dịch vụ (70%)', 'Công nghiệp (25%)', 'Nông nghiệp (5%)'], datasets: [{ data: [70, 25, 5], backgroundColor: ['#ff1493', '#ff69b4', '#ffb6c1'], borderWidth: 2, borderColor: '#fff', hoverOffset: 10 }] },
+                            data: {
+                                labels: ['Dịch vụ (70%)', 'Công nghiệp (25%)', 'Nông nghiệp (5%)'],
+                                datasets: [{ data: [70, 25, 5], backgroundColor: ['#ff1493', '#ff69b4', '#ffb6c1'], borderWidth: 2, borderColor: '#fff', hoverOffset: 10 }]
+                            },
                             options: { responsive: true, maintainAspectRatio: false, animation: { animateScale: true, animateRotate: true, duration: 4000, easing: 'easeOutQuart' }, plugins: { legend: { position: 'bottom', labels: { padding: 20, font: { size: 13, weight: 'bold' } } } }, cutout: '60%' }
                         });
                         if(isDark) updateAllChartsTheme();
@@ -579,11 +564,17 @@
                     setTimeout(() => {
                         const ctxLine = document.getElementById('gdpChart').getContext('2d');
                         let gradient = ctxLine.createLinearGradient(0, 0, 0, 400);
-                        gradient.addColorStop(0, 'rgba(255, 105, 180, 0.6)'); gradient.addColorStop(1, 'rgba(255, 105, 180, 0.0)'); 
+                        gradient.addColorStop(0, 'rgba(255, 105, 180, 0.6)'); 
+                        gradient.addColorStop(1, 'rgba(255, 105, 180, 0.0)'); 
+
                         gdpChart = new Chart(ctxLine, {
                             type: 'line',
-                            data: { labels: ['2023', '2024', '2025', '2026'], datasets: [{ label: 'Tăng trưởng GDP (%)', data: [1.5, 1.35, 2.3, 2.15], borderColor: '#ff1493', backgroundColor: gradient, borderWidth: 4, pointBackgroundColor: '#fff', pointBorderColor: '#ff1493', pointBorderWidth: 3, pointRadius: 6, pointHoverRadius: 10, fill: true, tension: 0.4 }] },
-                            options: { responsive: true, maintainAspectRatio: false, animation: { duration: 4000, easing: 'easeOutQuart' }, plugins: { legend: { labels: { font: { size: 14, weight: 'bold' } } } }, scales: { x: { grid: { display: false }, ticks: { font: { weight: 'bold' } } }, y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { weight: 'bold' }, stepSize: 0.5 } } }
+                            data: {
+                                labels: ['2023', '2024', '2025', '2026'],
+                                datasets: [{ label: 'Tăng trưởng GDP (%)', data: [1.5, 1.35, 2.3, 2.15], borderColor: '#ff1493', backgroundColor: gradient, borderWidth: 4, pointBackgroundColor: '#fff', pointBorderColor: '#ff1493', pointBorderWidth: 3, pointRadius: 6, pointHoverRadius: 10, fill: true, tension: 0.4 }]
+                            },
+                            options: {
+                                responsive: true, maintainAspectRatio: false, animation: { duration: 4000, easing: 'easeOutQuart' }, plugins: { legend: { labels: { font: { size: 14, weight: 'bold' } } } }, scales: { x: { grid: { display: false }, ticks: { font: { weight: 'bold' } } }, y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { weight: 'bold' }, stepSize: 0.5 } } }
                             }
                         });
                         if(isDark) updateAllChartsTheme();
@@ -596,6 +587,7 @@
             let textColor = isDark ? '#fce4ec' : '#333';
             let gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)';
             let borderColor = isDark ? '#0f0514' : '#fff';
+            
             Chart.defaults.color = textColor;
             if(structureChart) { structureChart.data.datasets[0].borderColor = borderColor; structureChart.update(); }
             if(gdpChart) { gdpChart.options.scales.x.ticks.color = textColor; gdpChart.options.scales.y.ticks.color = textColor; gdpChart.options.scales.y.grid.color = gridColor; gdpChart.update(); }
