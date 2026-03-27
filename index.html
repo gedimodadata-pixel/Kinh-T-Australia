@@ -317,29 +317,44 @@
         let autoScrollInterval;
         let isAutoScrolling = false;
 
-        // Xử lý khi người dùng đổi tab/tắt màn hình
+        // 1. NGẮT NHẠC KHI THOÁT TRANG
         document.addEventListener("visibilitychange", function() {
             if (document.hidden) {
                 if (isPlaying) audio.pause();
-                voiceAudio.pause(); // Tạm dừng luôn giọng đọc
+                voiceAudio.pause(); 
             } else {
                 if (isPlaying) audio.play().catch(e => {});
-                // Voice audio sẽ tự phát lại nếu người dùng tương tác lại
             }
         });
 
-        // Bắt sự kiện khi giọng đọc kết thúc -> Tăng nhạc nền lên lại
         voiceAudio.onended = function() {
-            audio.volume = 0.5;
+            audio.volume = 0.5; // Trả lại âm lượng khi đọc xong
         };
 
-        function startAutoScroll() {
+        // 2. THUẬT TOÁN ĐỒNG BỘ: CUỘN ĐỘNG THEO THỜI GIAN ÂM THANH
+        function startSmartScroll() {
             if (isAutoScrolling) return;
             isAutoScrolling = true;
             document.getElementById('scroll-icon').className = 'fas fa-pause'; 
             
             autoScrollInterval = setInterval(() => {
-                window.scrollBy(0, 1.2);
+                let speed = 1.2; // Tốc độ mặc định nếu không có giọng đọc
+                
+                // Thuật toán: Tính quãng đường còn lại chia cho thời gian MP3 còn lại
+                if(!voiceAudio.paused && voiceAudio.duration) {
+                    let remainingTime = voiceAudio.duration - voiceAudio.currentTime;
+                    let remainingScroll = (document.body.offsetHeight - window.innerHeight) - window.scrollY;
+                    
+                    if(remainingTime > 2 && remainingScroll > 0) {
+                        speed = (remainingScroll / remainingTime) * (25 / 1000); // 25ms là interval
+                        // Giới hạn tốc độ để không bị giật
+                        if (speed < 0.5) speed = 0.5;
+                        if (speed > 4) speed = 4;
+                    }
+                }
+                
+                window.scrollBy(0, speed);
+                
                 if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 5) {
                     stopAutoScroll();
                 }
@@ -355,32 +370,30 @@
         }
 
         function toggleScrollAction() {
-            if(isAutoScrolling) { stopAutoScroll(); } else { startAutoScroll(); }
+            if(isAutoScrolling) { stopAutoScroll(); } else { startSmartScroll(); }
         }
 
         window.addEventListener('wheel', stopAutoScroll, {passive: true});
         window.addEventListener('touchstart', stopAutoScroll, {passive: true});
 
-        // --- BẮT ĐẦU TRẢI NGHIỆM ---
+        // 3. KHỞI CHẠY TRẢI NGHIỆM
         function startExperience() {
             const splash = document.getElementById('splash-screen');
             splash.style.opacity = '0';
             setTimeout(() => { splash.style.display = 'none'; }, 800);
             
-            // Nhạc nền tự động nhỏ xuống mức 15% để nghe rõ giọng đọc
-            audio.volume = 0.15;
+            audio.volume = 0.15; // Nhạc nền nhỏ
             audio.play().catch(() => {});
             isPlaying = true;
             document.getElementById('audio-icon').className = 'fas fa-pause';
             
-            // Phát giọng đọc (nếu file baocao.mp3 đã được bạn tải lên GitHub)
             voiceAudio.play().catch(() => {
-                console.log("Bạn chưa tải file baocao.mp3 lên GitHub hoặc trình duyệt chặn âm thanh.");
-                audio.volume = 0.5; // Nếu không có giọng đọc thì bật nhạc to lại
+                audio.volume = 0.5; // Bật to nếu MP3 lỗi
             });
 
             setTimeout(typeWriter, 500);
 
+            // Chờ gõ xong intro -> Hiện báo cáo -> Bắt đầu cuộn đồng bộ
             setTimeout(() => {
                 const report = document.getElementById('report-content');
                 report.style.display = 'block';
@@ -388,8 +401,8 @@
                 report.classList.add('show');
                 
                 initReportAnimations();
-                setTimeout(startAutoScroll, 1000);
-            }, 4000);
+                setTimeout(startSmartScroll, 1000); // Kích hoạt thuật toán cuộn thông minh
+            }, 5000);
         }
 
         function toggleAudio() {
@@ -488,6 +501,7 @@
             if(typedStr === "pink") { document.body.classList.add('pink-flash'); setTimeout(() => document.body.classList.remove('pink-flash'), 2000); typedStr = ""; }
         });
 
+        // 4. BIỂU ĐỒ CHUYỂN ĐỘNG
         let structureChart, gdpChart;
         let pieRendered = false; let lineRendered = false;
         Chart.defaults.font.family = 'Quicksand'; Chart.defaults.color = '#333';
