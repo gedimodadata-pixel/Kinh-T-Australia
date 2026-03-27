@@ -167,7 +167,7 @@
     </div>
     
     <audio id="lofi-audio" loop src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=upbeat-pop-daylight-112028.mp3"></audio>
-    <audio id="voice-audio" src="baocao.mp3"></audio>
+    <audio id="voice-audio" src="./baocao.mp3" preload="auto"></audio>
 
     <div id="report-content">
         <div class="container">
@@ -317,7 +317,6 @@
         let autoScrollInterval;
         let isAutoScrolling = false;
 
-        // 1. NGẮT NHẠC KHI THOÁT TRANG
         document.addEventListener("visibilitychange", function() {
             if (document.hidden) {
                 if (isPlaying) audio.pause();
@@ -331,25 +330,26 @@
             audio.volume = 0.5; // Trả lại âm lượng khi đọc xong
         };
 
-        // 2. THUẬT TOÁN ĐỒNG BỘ: CUỘN ĐỘNG THEO THỜI GIAN ÂM THANH
+        // --- HỆ THỐNG ĐỒNG BỘ: TỰ ĐỘNG ĐIỀU CHỈNH TỐC ĐỘ CUỘN VỪA VỚI GIỌNG ĐỌC ---
         function startSmartScroll() {
             if (isAutoScrolling) return;
             isAutoScrolling = true;
             document.getElementById('scroll-icon').className = 'fas fa-pause'; 
             
             autoScrollInterval = setInterval(() => {
-                let speed = 1.2; // Tốc độ mặc định nếu không có giọng đọc
+                let speed = 1.2; // Tốc độ mặc định nếu lỗi file đọc
                 
-                // Thuật toán: Tính quãng đường còn lại chia cho thời gian MP3 còn lại
                 if(!voiceAudio.paused && voiceAudio.duration) {
                     let remainingTime = voiceAudio.duration - voiceAudio.currentTime;
                     let remainingScroll = (document.body.offsetHeight - window.innerHeight) - window.scrollY;
                     
-                    if(remainingTime > 2 && remainingScroll > 0) {
-                        speed = (remainingScroll / remainingTime) * (25 / 1000); // 25ms là interval
-                        // Giới hạn tốc độ để không bị giật
-                        if (speed < 0.5) speed = 0.5;
-                        if (speed > 4) speed = 4;
+                    if(remainingTime > 1 && remainingScroll > 0) {
+                        // Tính toán vận tốc = Quãng đường / Thời gian (1 nhịp 25ms)
+                        speed = (remainingScroll / remainingTime) * (25 / 1000);
+                        
+                        // Khóa giới hạn chống giật lag
+                        if (speed < 0.3) speed = 0.3;
+                        if (speed > 5) speed = 5;
                     }
                 }
                 
@@ -376,24 +376,30 @@
         window.addEventListener('wheel', stopAutoScroll, {passive: true});
         window.addEventListener('touchstart', stopAutoScroll, {passive: true});
 
-        // 3. KHỞI CHẠY TRẢI NGHIỆM
+        // --- BẮT ĐẦU TRẢI NGHIỆM ---
         function startExperience() {
             const splash = document.getElementById('splash-screen');
             splash.style.opacity = '0';
             setTimeout(() => { splash.style.display = 'none'; }, 800);
             
-            audio.volume = 0.15; // Nhạc nền nhỏ
+            // Nhạc nền nhỏ xuống 15%
+            audio.volume = 0.15;
             audio.play().catch(() => {});
             isPlaying = true;
             document.getElementById('audio-icon').className = 'fas fa-pause';
             
-            voiceAudio.play().catch(() => {
-                audio.volume = 0.5; // Bật to nếu MP3 lỗi
-            });
+            // PHÁT GIỌNG ĐỌC VÀ CẢNH BÁO LỖI
+            let voicePlayPromise = voiceAudio.play();
+            if (voicePlayPromise !== undefined) {
+                voicePlayPromise.catch(error => {
+                    console.log("Lỗi file âm thanh: ", error);
+                    alert("Lỗi: Không tìm thấy file 'baocao.mp3' hoặc bị lỗi tải. Vui lòng kiểm tra lại 3 điều: \n1. Tên file viết thường 100% \n2. File nằm cùng chỗ với index.html \n3. Xóa cache trình duyệt (Ctrl+F5)");
+                    audio.volume = 0.5; // Nếu lỗi, tăng nhạc nền lên lại
+                });
+            }
 
             setTimeout(typeWriter, 500);
 
-            // Chờ gõ xong intro -> Hiện báo cáo -> Bắt đầu cuộn đồng bộ
             setTimeout(() => {
                 const report = document.getElementById('report-content');
                 report.style.display = 'block';
@@ -401,7 +407,7 @@
                 report.classList.add('show');
                 
                 initReportAnimations();
-                setTimeout(startSmartScroll, 1000); // Kích hoạt thuật toán cuộn thông minh
+                setTimeout(startSmartScroll, 1000); 
             }, 5000);
         }
 
