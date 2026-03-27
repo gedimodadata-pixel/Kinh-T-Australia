@@ -111,13 +111,32 @@
         .pink-flash { animation: neonFlash 0.5s 4 alternate; }
         @keyframes neonFlash { from { background-color: var(--bg-color); } to { background-color: #ff1493; } }
 
+        /* ĐÃ FIX: CHUYỂN ĐỔI ẢNH THÀNH DẠNG VUỐT NGANG (SWIPE CAROUSEL) TRÊN ĐIỆN THOẠI */
         @media (max-width: 768px) {
             .cursor, .cursor-trail { display: none; }
             * { cursor: auto !important; }
             .container { padding: 15px; width: 100%; overflow: hidden;}
             .timeline-item { padding: 25px 15px; margin-bottom: 30px; width: 100%;}
-            .image-grid { grid-template-columns: 1fr; gap: 15px; } 
-            .img-container { height: 200px; }
+            
+            /* Sửa lưới ảnh: Trở thành thanh cuộn ngang mượt mà */
+            .image-grid { 
+                display: flex; 
+                overflow-x: auto; 
+                scroll-snap-type: x mandatory; 
+                gap: 15px; 
+                padding-bottom: 10px; /* Chừa chỗ cho thanh cuộn nếu có */
+                -webkit-overflow-scrolling: touch;
+            }
+            /* Ẩn thanh cuộn cho thẩm mỹ */
+            .image-grid::-webkit-scrollbar { display: none; }
+            .image-grid { -ms-overflow-style: none; scrollbar-width: none; }
+
+            .img-container { 
+                min-width: 85%; /* Hiện 1 ảnh to và ló ra 1 chút ảnh tiếp theo để gợi ý vuốt */
+                height: 180px; 
+                scroll-snap-align: center; 
+            }
+
             .charts-grid { grid-template-columns: 1fr; }
             .social-sticky { display: none; }
             .chart-container { height: 30vh; }
@@ -151,7 +170,7 @@
 
     <section class="hero" id="hero-section">
         <div class="typing-text" id="greeting"></div>
-        <p>Báo cáo Toàn cảnh & Dự báo Diễn biến Kinh tế Australia 2023 - 2026</p>
+        <p>Báo cáo Toàn cảnh & Dự báo Diễn biến Kinh tế 2023 - 2026</p>
     </section>
 
     <div class="social-sticky">
@@ -327,29 +346,28 @@
         });
 
         voiceAudio.onended = function() {
-            audio.volume = 0.5; // Trả lại âm lượng khi đọc xong
+            audio.volume = 0.5; 
         };
 
-        // --- HỆ THỐNG ĐỒNG BỘ: TỰ ĐỘNG ĐIỀU CHỈNH TỐC ĐỘ CUỘN VỪA VỚI GIỌNG ĐỌC ---
+        // --- ĐÃ FIX: GIỚI HẠN TỐC ĐỘ CUỘN CAO HƠN ---
         function startSmartScroll() {
             if (isAutoScrolling) return;
             isAutoScrolling = true;
             document.getElementById('scroll-icon').className = 'fas fa-pause'; 
             
             autoScrollInterval = setInterval(() => {
-                let speed = 1.2; // Tốc độ mặc định nếu lỗi file đọc
+                let speed = 1.2; 
                 
                 if(!voiceAudio.paused && voiceAudio.duration) {
                     let remainingTime = voiceAudio.duration - voiceAudio.currentTime;
                     let remainingScroll = (document.body.offsetHeight - window.innerHeight) - window.scrollY;
                     
                     if(remainingTime > 1 && remainingScroll > 0) {
-                        // Tính toán vận tốc = Quãng đường / Thời gian (1 nhịp 25ms)
                         speed = (remainingScroll / remainingTime) * (25 / 1000);
                         
-                        // Khóa giới hạn chống giật lag
+                        // Cho phép tốc độ trượt nhanh hơn nếu bị tụt lại
                         if (speed < 0.3) speed = 0.3;
-                        if (speed > 5) speed = 5;
+                        if (speed > 12) speed = 12; // Mở khóa giới hạn từ 5 lên 12
                     }
                 }
                 
@@ -376,25 +394,21 @@
         window.addEventListener('wheel', stopAutoScroll, {passive: true});
         window.addEventListener('touchstart', stopAutoScroll, {passive: true});
 
-        // --- BẮT ĐẦU TRẢI NGHIỆM ---
         function startExperience() {
             const splash = document.getElementById('splash-screen');
             splash.style.opacity = '0';
             setTimeout(() => { splash.style.display = 'none'; }, 800);
             
-            // Nhạc nền nhỏ xuống 15%
             audio.volume = 0.15;
             audio.play().catch(() => {});
             isPlaying = true;
             document.getElementById('audio-icon').className = 'fas fa-pause';
             
-            // PHÁT GIỌNG ĐỌC VÀ CẢNH BÁO LỖI
             let voicePlayPromise = voiceAudio.play();
             if (voicePlayPromise !== undefined) {
                 voicePlayPromise.catch(error => {
                     console.log("Lỗi file âm thanh: ", error);
-                    alert("Lỗi: Không tìm thấy file 'baocao.mp3' hoặc bị lỗi tải. Vui lòng kiểm tra lại 3 điều: \n1. Tên file viết thường 100% \n2. File nằm cùng chỗ với index.html \n3. Xóa cache trình duyệt (Ctrl+F5)");
-                    audio.volume = 0.5; // Nếu lỗi, tăng nhạc nền lên lại
+                    audio.volume = 0.5; 
                 });
             }
 
@@ -407,8 +421,9 @@
                 report.classList.add('show');
                 
                 initReportAnimations();
-                setTimeout(startSmartScroll, 1000); 
-            }, 5000);
+                // Bắt đầu trượt đồng bộ
+                setTimeout(startSmartScroll, 500); 
+            }, 4000);
         }
 
         function toggleAudio() {
@@ -474,7 +489,7 @@
             });
         }
 
-        const greetingText = "Chào mừng đến với báo cáo kinh tế của Trang!";
+        const greetingText = "Chào mừng đến với báo cáo kinh tế của Huyền Trang!";
         let i = 0;
         function typeWriter() {
             if (i < greetingText.length) {
@@ -507,7 +522,6 @@
             if(typedStr === "pink") { document.body.classList.add('pink-flash'); setTimeout(() => document.body.classList.remove('pink-flash'), 2000); typedStr = ""; }
         });
 
-        // 4. BIỂU ĐỒ CHUYỂN ĐỘNG
         let structureChart, gdpChart;
         let pieRendered = false; let lineRendered = false;
         Chart.defaults.font.family = 'Quicksand'; Chart.defaults.color = '#333';
