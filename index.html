@@ -37,19 +37,21 @@
         * { box-sizing: border-box; }
         ::selection { background-color: var(--primary-pink); color: white; }
 
+        /* Splash Screen */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s; padding: 20px; }
         #splash-screen h1 { color: var(--primary-pink); margin-bottom: 30px; font-size: clamp(1.5rem, 5vw, 2.5rem); text-shadow: var(--neon-shadow); text-align: center; line-height: 1.4; }
-        .start-btn { background: var(--primary-pink); color: white; font-size: 1.2rem; font-weight: bold; padding: 15px 40px; border: none; border-radius: 50px; box-shadow: 0 10px 20px rgba(255, 105, 180, 0.4); transition: 0.3s; animation: pulseBtn 2s infinite; cursor: pointer !important; }
+        .start-btn { background: var(--primary-pink); color: white; font-size: 1.2rem; font-weight: bold; padding: 15px 40px; border: none; border-radius: 50px; box-shadow: 0 10px 20px rgba(255, 105, 180, 0.4); transition: 0.3s; animation: pulseBtn 2s infinite; cursor: none !important; }
         .start-btn:hover { transform: scale(1.1); box-shadow: 0 15px 25px rgba(255, 105, 180, 0.6); }
         @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
         #progress-bar { position: fixed; top: 0; left: 0; width: 0%; height: 4px; background-color: var(--primary-pink); z-index: 9999; box-shadow: var(--neon-shadow); transition: width 0.1s; }
         
-        .cursor { width: 20px; height: 20px; border: 2px solid var(--primary-pink); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background-color 0.2s; }
-        .cursor-trail { width: 8px; height: 8px; background-color: var(--primary-pink); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: 0.1s ease-out; }
+        /* ĐÃ FIX: Nâng Z-index của con trỏ chuột lên mức cao nhất (100000) để luôn nổi lên trên Màn hình chào */
+        .cursor { width: 20px; height: 20px; border: 2px solid var(--primary-pink); border-radius: 50%; position: fixed; pointer-events: none; z-index: 100001; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+        .cursor-trail { width: 8px; height: 8px; background-color: var(--primary-pink); border-radius: 50%; position: fixed; pointer-events: none; z-index: 100000; transform: translate(-50%, -50%); transition: 0.1s ease-out; }
 
         nav { position: fixed; top: 0; left: 0; width: 100%; padding: 15px 5%; background: var(--glass-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
-        .theme-toggle { background: none; border: none; font-size: 24px; color: var(--primary-pink); transition: 0.3s; cursor: pointer !important;}
+        .theme-toggle { background: none; border: none; font-size: 24px; color: var(--primary-pink); transition: 0.3s; cursor: none !important;}
         .theme-toggle:hover { transform: rotate(30deg) scale(1.2); }
 
         .marquee { width: 100%; background: var(--primary-pink); color: white; padding: 10px 0; overflow: hidden; white-space: nowrap; margin-top: 60px; }
@@ -93,11 +95,11 @@
         .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
 
         .social-sticky { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 15px; z-index: 100; }
-        .social-sticky a { color: var(--primary-pink); font-size: 24px; text-decoration: none; transition: 0.3s; display: block; }
+        .social-sticky a { color: var(--primary-pink); font-size: 24px; text-decoration: none; transition: 0.3s; display: block; cursor: none !important;}
         .social-sticky a:hover { transform: scale(1.3) translateX(-5px); text-shadow: var(--neon-shadow); }
 
         .tools-bottom { position: fixed; bottom: 20px; left: 20px; display: flex; gap: 15px; z-index: 100; }
-        .tool-btn { background: var(--glass-bg); border: 1px solid var(--primary-pink); color: var(--primary-pink); width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; backdrop-filter: blur(5px); box-shadow: var(--card-shadow); transition: 0.3s; cursor: pointer !important; }
+        .tool-btn { background: var(--glass-bg); border: 1px solid var(--primary-pink); color: var(--primary-pink); width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; backdrop-filter: blur(5px); box-shadow: var(--card-shadow); transition: 0.3s; cursor: none !important; }
         .tool-btn:hover { transform: translateY(-5px) scale(1.1); background: var(--primary-pink); color: white; }
 
         .closing-message { height: 50px; overflow: hidden; position: relative; margin: 0 auto; text-align: center; width: 100%; }
@@ -105,7 +107,7 @@
         @keyframes scrollUpText { 0% { transform: translateY(50px); opacity: 0; } 20% { transform: translateY(10px); opacity: 1; } 80% { transform: translateY(-10px); opacity: 1; } 100% { transform: translateY(-50px); opacity: 0; } }
 
         footer { text-align: center; padding: 10px 20px 40px 20px; border-top: 1px solid var(--glass-border); font-size: 1.2rem; scroll-margin-top: 80px;}
-        .design-by { color: var(--primary-pink); font-weight: bold; position: relative; padding: 10px 20px; display: inline-block; border: 2px dashed transparent; transition: 0.3s; border-radius: 30px; cursor: pointer !important;}
+        .design-by { color: var(--primary-pink); font-weight: bold; position: relative; padding: 10px 20px; display: inline-block; border: 2px dashed transparent; transition: 0.3s; border-radius: 30px; cursor: none !important;}
         .design-by:hover { text-shadow: var(--neon-shadow); transform: scale(1.1); background: rgba(255, 105, 180, 0.1); }
         
         .pink-flash { animation: neonFlash 0.5s 4 alternate; }
@@ -116,13 +118,18 @@
             * { cursor: auto !important; }
             .container { padding: 15px; width: 100%; overflow: hidden;}
             .timeline-item { padding: 25px 15px; margin-bottom: 30px; width: 100%;}
-            .image-grid { grid-template-columns: 1fr; gap: 15px; } 
-            .img-container { height: 200px; }
+            .image-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
+            .image-grid::-webkit-scrollbar { display: none; }
+            .image-grid { -ms-overflow-style: none; scrollbar-width: none; }
+            .img-container { min-width: 85%; height: 180px; scroll-snap-align: center; }
             .charts-grid { grid-template-columns: 1fr; }
             .social-sticky { display: none; }
             .chart-container { height: 30vh; }
             .tools-bottom { bottom: 15px; left: 15px; gap: 10px; }
-            .tool-btn { width: 40px; height: 40px; font-size: 16px; }
+            .tool-btn { width: 40px; height: 40px; font-size: 16px; cursor: pointer !important; }
+            .start-btn { cursor: pointer !important; }
+            .theme-toggle { cursor: pointer !important; }
+            .design-by { cursor: pointer !important; }
             .hero p { padding: 0 10px; }
         }
     </style>
@@ -151,7 +158,7 @@
 
     <section class="hero" id="hero-section">
         <div class="typing-text" id="greeting"></div>
-        <p>Báo cáo Toàn cảnh & Dự báo Diễn biến Kinh tế Australia 2023 - 2026</p>
+        <p>Báo cáo Toàn cảnh & Dự báo Diễn biến Kinh tế 2023 - 2026</p>
     </section>
 
     <div class="social-sticky">
@@ -313,8 +320,7 @@
         const audio = document.getElementById('lofi-audio');
         const voiceAudio = document.getElementById('voice-audio');
         
-        // ĐÃ FIX 1: ÉP GIẢM TỐC ĐỘ PHÁT GIỌNG ĐỌC CÒN 90% (THƯ THẢ HƠN)
-        voiceAudio.playbackRate = 0.9;
+        voiceAudio.playbackRate = 0.95; // Đọc chậm rãi lại
         
         let isPlaying = false;
         let autoScrollInterval;
@@ -333,14 +339,13 @@
             audio.volume = 0.5; 
         };
 
-        // --- ĐÃ FIX 2: MỞ KHÓA GIỚI HẠN TỐC ĐỘ CUỘN CAO HƠN NHIỀU LẦN ---
         function startSmartScroll() {
             if (isAutoScrolling) return;
             isAutoScrolling = true;
             document.getElementById('scroll-icon').className = 'fas fa-pause'; 
             
             autoScrollInterval = setInterval(() => {
-                let speed = 2.5; // Tốc độ mặc định chạy nhanh hơn
+                let speed = 1.2; 
                 
                 if(!voiceAudio.paused && voiceAudio.duration) {
                     let remainingTime = voiceAudio.duration - voiceAudio.currentTime;
@@ -349,9 +354,9 @@
                     if(remainingTime > 1 && remainingScroll > 0) {
                         speed = (remainingScroll / remainingTime) * (25 / 1000);
                         
-                        // Cho phép tốc độ trượt vọt lên tối đa để kịp bài đọc
+                        // Linh hoạt tăng tốc nếu cần, giữ độ êm ái
                         if (speed < 0.5) speed = 0.5;
-                        if (speed > 15) speed = 15; 
+                        if (speed > 8) speed = 8; 
                     }
                 }
                 
@@ -405,7 +410,6 @@
                 report.classList.add('show');
                 
                 initReportAnimations();
-                // Bắt đầu trượt đồng bộ
                 setTimeout(startSmartScroll, 500); 
             }, 4000);
         }
@@ -473,7 +477,7 @@
             });
         }
 
-        const greetingText = "Chào mừng đến với báo cáo kinh tế của Trang!";
+        const greetingText = "Chào mừng đến với báo cáo kinh tế của Huyền Trang!";
         let i = 0;
         function typeWriter() {
             if (i < greetingText.length) {
