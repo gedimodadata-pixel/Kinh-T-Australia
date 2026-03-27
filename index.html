@@ -111,32 +111,13 @@
         .pink-flash { animation: neonFlash 0.5s 4 alternate; }
         @keyframes neonFlash { from { background-color: var(--bg-color); } to { background-color: #ff1493; } }
 
-        /* ĐÃ FIX: CHUYỂN ĐỔI ẢNH THÀNH DẠNG VUỐT NGANG (SWIPE CAROUSEL) TRÊN ĐIỆN THOẠI */
         @media (max-width: 768px) {
             .cursor, .cursor-trail { display: none; }
             * { cursor: auto !important; }
             .container { padding: 15px; width: 100%; overflow: hidden;}
             .timeline-item { padding: 25px 15px; margin-bottom: 30px; width: 100%;}
-            
-            /* Sửa lưới ảnh: Trở thành thanh cuộn ngang mượt mà */
-            .image-grid { 
-                display: flex; 
-                overflow-x: auto; 
-                scroll-snap-type: x mandatory; 
-                gap: 15px; 
-                padding-bottom: 10px; /* Chừa chỗ cho thanh cuộn nếu có */
-                -webkit-overflow-scrolling: touch;
-            }
-            /* Ẩn thanh cuộn cho thẩm mỹ */
-            .image-grid::-webkit-scrollbar { display: none; }
-            .image-grid { -ms-overflow-style: none; scrollbar-width: none; }
-
-            .img-container { 
-                min-width: 85%; /* Hiện 1 ảnh to và ló ra 1 chút ảnh tiếp theo để gợi ý vuốt */
-                height: 180px; 
-                scroll-snap-align: center; 
-            }
-
+            .image-grid { grid-template-columns: 1fr; gap: 15px; } 
+            .img-container { height: 200px; }
             .charts-grid { grid-template-columns: 1fr; }
             .social-sticky { display: none; }
             .chart-container { height: 30vh; }
@@ -170,7 +151,7 @@
 
     <section class="hero" id="hero-section">
         <div class="typing-text" id="greeting"></div>
-        <p>Báo cáo Toàn cảnh & Dự báo Diễn biến Kinh tế 2023 - 2026</p>
+        <p>Báo cáo Toàn cảnh & Dự báo Diễn biến Kinh tế Australia 2023 - 2026</p>
     </section>
 
     <div class="social-sticky">
@@ -332,6 +313,9 @@
         const audio = document.getElementById('lofi-audio');
         const voiceAudio = document.getElementById('voice-audio');
         
+        // ĐÃ FIX 1: ÉP GIẢM TỐC ĐỘ PHÁT GIỌNG ĐỌC CÒN 90% (THƯ THẢ HƠN)
+        voiceAudio.playbackRate = 0.9;
+        
         let isPlaying = false;
         let autoScrollInterval;
         let isAutoScrolling = false;
@@ -349,14 +333,14 @@
             audio.volume = 0.5; 
         };
 
-        // --- ĐÃ FIX: GIỚI HẠN TỐC ĐỘ CUỘN CAO HƠN ---
+        // --- ĐÃ FIX 2: MỞ KHÓA GIỚI HẠN TỐC ĐỘ CUỘN CAO HƠN NHIỀU LẦN ---
         function startSmartScroll() {
             if (isAutoScrolling) return;
             isAutoScrolling = true;
             document.getElementById('scroll-icon').className = 'fas fa-pause'; 
             
             autoScrollInterval = setInterval(() => {
-                let speed = 1.2; 
+                let speed = 2.5; // Tốc độ mặc định chạy nhanh hơn
                 
                 if(!voiceAudio.paused && voiceAudio.duration) {
                     let remainingTime = voiceAudio.duration - voiceAudio.currentTime;
@@ -365,9 +349,9 @@
                     if(remainingTime > 1 && remainingScroll > 0) {
                         speed = (remainingScroll / remainingTime) * (25 / 1000);
                         
-                        // Cho phép tốc độ trượt nhanh hơn nếu bị tụt lại
-                        if (speed < 0.3) speed = 0.3;
-                        if (speed > 12) speed = 12; // Mở khóa giới hạn từ 5 lên 12
+                        // Cho phép tốc độ trượt vọt lên tối đa để kịp bài đọc
+                        if (speed < 0.5) speed = 0.5;
+                        if (speed > 15) speed = 15; 
                     }
                 }
                 
@@ -489,7 +473,7 @@
             });
         }
 
-        const greetingText = "Chào mừng đến với báo cáo kinh tế của Huyền Trang!";
+        const greetingText = "Chào mừng đến với báo cáo kinh tế của Trang!";
         let i = 0;
         function typeWriter() {
             if (i < greetingText.length) {
